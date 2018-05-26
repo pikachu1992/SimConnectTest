@@ -31,6 +31,7 @@
             this.buttonConnect = new System.Windows.Forms.Button();
             this.buttonDisconnect = new System.Windows.Forms.Button();
             this.richResponse = new System.Windows.Forms.RichTextBox();
+            this.buttonSetAiPlane = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonConnect
@@ -61,11 +62,22 @@
             this.richResponse.TabIndex = 1;
             this.richResponse.Text = "";
             // 
+            // buttonSetAiPlane
+            // 
+            this.buttonSetAiPlane.Location = new System.Drawing.Point(174, 12);
+            this.buttonSetAiPlane.Name = "buttonSetAiPlane";
+            this.buttonSetAiPlane.Size = new System.Drawing.Size(75, 23);
+            this.buttonSetAiPlane.TabIndex = 2;
+            this.buttonSetAiPlane.Text = "Set AI plane";
+            this.buttonSetAiPlane.UseVisualStyleBackColor = true;
+            this.buttonSetAiPlane.Click += new System.EventHandler(this.buttonSetAiPlane_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(187, 233);
+            this.ClientSize = new System.Drawing.Size(260, 233);
+            this.Controls.Add(this.buttonSetAiPlane);
             this.Controls.Add(this.richResponse);
             this.Controls.Add(this.buttonDisconnect);
             this.Controls.Add(this.buttonConnect);
@@ -80,6 +92,7 @@
         private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.Button buttonDisconnect;
         private System.Windows.Forms.RichTextBox richResponse;
+        private System.Windows.Forms.Button buttonSetAiPlane;
     }
 }
 

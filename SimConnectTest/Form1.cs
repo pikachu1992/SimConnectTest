@@ -8,16 +8,11 @@
 // 
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 // Add these two statements to all SimConnect clients 
-using LockheedMartin.Prepar3D.SimConnect;
 using System.Runtime.InteropServices;
+using Microsoft.FlightSimulator.SimConnect;
 
 namespace SimConnectTest
 {
@@ -229,6 +224,11 @@ namespace SimConnectTest
 
             // display it 
             richResponse.Text = output;
+        }
+
+        private void buttonSetAiPlane_Click(object sender, EventArgs e)
+        {
+            //CreateNewAIAircraft();
         }
     }
 }
