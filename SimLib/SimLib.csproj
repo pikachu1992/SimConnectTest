@@ -50,5 +50,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SimConnectForm.Events.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

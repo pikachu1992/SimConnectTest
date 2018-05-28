@@ -1,6 +1,6 @@
 ﻿namespace PilotClient
 {
-    partial class Form1
+    partial class connectedExampleFrm
     {
         /// <summary>
         /// Required designer variable.
@@ -42,15 +42,16 @@
             this.txtLog.TabIndex = 0;
             this.txtLog.Text = "";
             // 
-            // Form1
+            // connectedExampleFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(277, 413);
             this.Controls.Add(this.txtLog);
-            this.Name = "Form1";
+            this.Name = "connectedExampleFrm";
             this.Text = "Form1";
-            this.OnSimConnectEvent += new SimLib.SimConnectForm.SimConnectEvent(this.Form1_OnSimConnectEvent);
+            this.SimConnectOpen += new System.EventHandler(this.connectedExampleFrm_SimConnectOpen);
+            this.SimConnectClosed += new System.EventHandler(this.connectedExampleFrm_SimConnectClosed);
             this.ResumeLayout(false);
 
         }

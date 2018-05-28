@@ -16,9 +16,11 @@ namespace PilotClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form1 form1 = new Form1();
-            form1.openConnection();
-            Application.Run(form1);
+            connectedExampleFrm frm = new connectedExampleFrm();
+
+            frm.OpenSimConnect(); // start trying to connect SimConnect
+
+            Application.Run(frm);
         }
     }
 }
