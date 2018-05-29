@@ -42,7 +42,7 @@ namespace PilotClient
         {
             TransponderChangedEventArgs args = (TransponderChangedEventArgs)e;
 
-            displayText(String.Format("Transponder: {0}", args.Transponder));
+            displayText(String.Format("Transponder: {0}", args.Transponder.ToString("X").PadLeft(4, '0')));
         }
     }
 }
