@@ -37,5 +37,12 @@ namespace PilotClient
         {
             displayText("Disconnected from simulator");
         }
+
+        private void connectedExampleFrm_SimConnectTransponderChanged(object sender, EventArgs e)
+        {
+            TransponderChangedEventArgs args = (TransponderChangedEventArgs)e;
+
+            displayText(String.Format("Transponder: {0}", args.Transponder));
+        }
     }
 }

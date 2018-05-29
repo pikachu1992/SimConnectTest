@@ -54,6 +54,7 @@ namespace SimLib
                     simconnect = new SimConnect("SimLib.SimLibSimConnect", Handle, WM_USER_SIMCONNECT, null, 0);
 
                     RegisterEvents();
+                    RegisterDataDefinitions();
                 }
                 catch (COMException)
                 {
@@ -84,6 +85,25 @@ namespace SimLib
             DisposeSimConnect();
 
             base.Dispose(disposing);
+        }
+
+        private async void WatchSimConnect()
+        {
+            while (simconnect != null)
+            {
+                try
+                {
+
+                }
+                catch (COMException)
+                {
+
+                }
+                finally
+                {
+                    await Task.Delay(SimConnectPoolCooldown);
+                }
+            }
         }
     }
 }
