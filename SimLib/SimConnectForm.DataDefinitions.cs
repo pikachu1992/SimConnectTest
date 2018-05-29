@@ -21,6 +21,8 @@ namespace SimLib
 
             // register the main data event handler
             simconnect.OnRecvSimobjectDataBytype += Simconnect_OnRecvSimobjectDataBytype;
+
+            simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
         }
 
         private void Simconnect_OnRecvSimobjectDataBytype(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data)
@@ -32,8 +34,13 @@ namespace SimLib
                     case DATA_REQUESTS.Radios:
                         Radios CurrentRadios = (Radios)data.dwData[0];
                         if (LastRadios.Transponder != CurrentRadios.Transponder)
+                        {
                             LastRadios.Transponder = CurrentRadios.Transponder;
-                        SimConnectTransponderChanged(sender, new TransponderChangedEventArgs() { Transponder = CurrentRadios.Transponder });
+                            SimConnectTransponderChanged(sender, new TransponderChangedEventArgs() { Transponder = CurrentRadios.Transponder });
+
+                            // re-register SimConnect listener
+                        }
+                        simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
                         break;
                     default:
                         break;
