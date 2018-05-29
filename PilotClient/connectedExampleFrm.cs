@@ -1,10 +1,19 @@
 ﻿using SimLib;
 using System;
+using System.Diagnostics;
+using System.Net.Sockets;
+using System.Net.Http;
+using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace PilotClient
-{
+{   
+
     public partial class connectedExampleFrm : SimConnectForm
     {
+        private string OAuthToken
+        { get; set; }
+
         // Response number 
         int response = 1;
 
@@ -14,6 +23,8 @@ namespace PilotClient
         public connectedExampleFrm()
         {
             InitializeComponent();
+
+            OAuthToken = null;
         }
 
         void displayText(string s)
@@ -30,7 +41,34 @@ namespace PilotClient
 
         private void connectedExampleFrm_SimConnectOpen(object sender, EventArgs e)
         {
-            displayText("Connected to simulator");
+            // sim opened, send user to login form
+            Process.Start("http://37.59.115.154/html/login.html");
+        }
+
+        /// <summary>
+        /// Validates a given ASSR code on the Auth API token endpoint, populates OAuthToken when a valid squawk code is set
+        /// </summary>
+        /// <param name="ASSR"></param>
+        private async void ValidateASSR(string ASSR)
+        {
+            HttpClient client = new HttpClient();
+
+            client.BaseAddress = new Uri("https://fa-authapi.herokuapp.com");
+
+            HttpResponseMessage response = await client.GetAsync("/token/" + ASSR);
+
+
+            if ((int)response.StatusCode == 200)
+            {
+                // logged in
+
+                // this is the secret to send on the next API requests
+                OAuthToken = response.Content.ReadAsStringAsync().Result;
+            }
+            else
+            {
+                OAuthToken = null; // not sure
+            }
         }
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)
@@ -42,7 +80,11 @@ namespace PilotClient
         {
             TransponderChangedEventArgs args = (TransponderChangedEventArgs)e;
 
-            displayText(String.Format("Transponder: {0}", args.Transponder.ToString("X").PadLeft(4, '0')));
+            if (OAuthToken == null)
+            {
+                // validate new squawk codes on the API
+                ValidateASSR(args.Transponder.ToString("X").PadLeft(4, '0'));
+            }
         }
     }
 }
