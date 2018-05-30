@@ -78,6 +78,8 @@ namespace PilotClient
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)
         {
+            if (WebSocket != null)
+                WebSocket.Close();
             displayText("Disconnected from simulator");
         }
 
@@ -99,7 +101,7 @@ namespace PilotClient
         {
             PositionChangedEventArgs args = (PositionChangedEventArgs)e;
             if (WebSocket != null)
-                WebSocket.Emit("position", args.position);
+                WebSocket.Emit("position", "teste");
         }
     }
 }
