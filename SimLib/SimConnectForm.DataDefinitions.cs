@@ -19,47 +19,17 @@ namespace SimLib
                 SimConnect.SIMCONNECT_UNUSED);
             simconnect.RegisterDataDefineStruct<Radios>(DEFINITIONS.Radios);
 
-            // register the main data event handler
-            simconnect.OnRecvSimobjectDataBytype += Simconnect_OnRecvSimobjectDataBytype;
-
             simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
         }
 
-        private void Simconnect_OnRecvSimobjectDataBytype(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data)
+        private void OnRecvRadios(object sender, Radios radios)
         {
-            try
+            if (LastRadios.Transponder != radios.Transponder)
             {
-                switch ((DATA_REQUESTS)data.dwRequestID)
-                {
-                    case DATA_REQUESTS.Radios:
-                        Radios CurrentRadios = (Radios)data.dwData[0];
-                        if (LastRadios.Transponder != CurrentRadios.Transponder)
-                        {
-                            LastRadios.Transponder = CurrentRadios.Transponder;
-                            SimConnectTransponderChanged(sender, new TransponderChangedEventArgs() { Transponder = CurrentRadios.Transponder });
-
-                            // re-register SimConnect listener
-                        }
-                        simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
-                        break;
-                    default:
-                        break;
-                }
+                LastRadios.Transponder = radios.Transponder;
+                SimConnectTransponderChanged(sender, new TransponderChangedEventArgs() { Transponder = radios.Transponder });
             }
-            catch (COMException ex)
-            {
-                throw ex;
-            }
-        }
-
-        enum DEFINITIONS
-        {
-            Radios
-        }
-
-        enum DATA_REQUESTS
-        {
-            Radios
+            simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]

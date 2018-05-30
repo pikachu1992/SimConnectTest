@@ -90,5 +90,10 @@ namespace PilotClient
                     ValidateASSR(args.Transponder.ToString("X").PadLeft(4, '0'));
             }
         }
+
+        private void connectedExampleFrm_SimConnectPositionChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

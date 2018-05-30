@@ -32,7 +32,8 @@ namespace SimLib
                 simconnect.OnRecvException += new SimConnect.RecvExceptionEventHandler(SimConnect_OnRecvException);
 
                 // listen to events 
-                simconnect.OnRecvEvent += new SimConnect.RecvEventEventHandler(simconnect_OnRecvEvent);
+                simconnect.OnRecvEvent += new SimConnect.RecvEventEventHandler(SimConnect_OnRecvEvent);
+                simconnect.OnRecvSimobjectDataBytype += new SimConnect.RecvSimobjectDataBytypeEventHandler(SimConnect_OnRecvSimobjectDataBytype);
 
             }
             catch (COMException ex)
@@ -61,9 +62,31 @@ namespace SimLib
             SimConnectClosed(this, new EventArgs());
         }
 
-        private void simconnect_OnRecvEvent(SimConnect sender, SIMCONNECT_RECV_EVENT recEvent)
+        private void SimConnect_OnRecvEvent(SimConnect sender, SIMCONNECT_RECV_EVENT data)
         {
             SimConnectEvent(this, new EventArgs());
+        }
+        
+        private void SimConnect_OnRecvSimobjectDataBytype(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA_BYTYPE data)
+        {
+            try
+            {
+                switch ((DATA_REQUESTS)data.dwRequestID)
+                {
+                    case DATA_REQUESTS.Radios:
+                        OnRecvRadios(sender, (Radios)data.dwData[0]);
+                        break;
+                    case DATA_REQUESTS.Position:
+                        OnRecvPosition(sender, (Position)data.dwData[0]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (COMException ex)
+            {
+                throw ex;
+            }
         }
     }
 }

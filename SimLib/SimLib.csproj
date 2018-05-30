@@ -58,6 +58,9 @@
     <Compile Include="SimConnectForm.Pooling.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SimConnectForm.Position.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SimConnectForm.Events.cs">

@@ -20,6 +20,18 @@ namespace SimLib
         /// </summary>
         private SimConnect simconnect = null;
 
+        enum DEFINITIONS
+        {
+            Radios,
+            Position
+        }
+
+        enum DATA_REQUESTS
+        {
+            Radios,
+            Position
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -55,6 +67,7 @@ namespace SimLib
 
                     RegisterEvents();
                     RegisterDataDefinitions();
+                    RegisterPosition();
                 }
                 catch (COMException)
                 {

@@ -51,6 +51,7 @@
             this.Name = "connectedExampleFrm";
             this.Text = "Form1";
             this.SimConnectTransponderChanged += new System.EventHandler(this.connectedExampleFrm_SimConnectTransponderChanged);
+            this.SimConnectPositionChanged += new System.EventHandler(this.connectedExampleFrm_SimConnectPositionChanged);
             this.SimConnectOpen += new System.EventHandler(this.connectedExampleFrm_SimConnectOpen);
             this.SimConnectClosed += new System.EventHandler(this.connectedExampleFrm_SimConnectClosed);
             this.ResumeLayout(false);
