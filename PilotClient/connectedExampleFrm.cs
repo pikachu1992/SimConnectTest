@@ -76,14 +76,18 @@ namespace PilotClient
             displayText("Disconnected from simulator");
         }
 
-        private void connectedExampleFrm_SimConnectTransponderChanged(object sender, EventArgs e)
+        private async void connectedExampleFrm_SimConnectTransponderChanged(object sender, EventArgs e)
         {
             TransponderChangedEventArgs args = (TransponderChangedEventArgs)e;
 
             if (OAuthToken == null)
             {
-                // validate new squawk codes on the API
-                ValidateASSR(args.Transponder.ToString("X").PadLeft(4, '0'));
+                // wait for the user to set on a code
+                await Task.Delay(2500);
+
+                if (LastRadios.Transponder == args.Transponder)
+                    // validate new squawk codes on the API
+                    ValidateASSR(args.Transponder.ToString("X").PadLeft(4, '0'));
             }
         }
     }
