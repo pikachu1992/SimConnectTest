@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using Quobject.SocketIoClientDotNet.Client;
+using System.Collections.Immutable;
 
 namespace PilotClient
 {   
@@ -67,10 +68,12 @@ namespace PilotClient
                 // this is the secret to send on the next API requests
                 OAuthToken = response.Content.ReadAsStringAsync().Result;
 
-                WebSocket = IO.Socket("https://fa-live.herokuapp.com/");
-                WebSocket.On("new message", (data) =>
+                WebSocket = IO.Socket("http://37.59.115.154:8000/");
+                //WebSocket = IO.Socket("http://localhost:8000/");
+                //WebSocket = IO.Socket("https://fa-live.herokuapp.com/");
+                WebSocket.On("position", (data) =>
                 {
-                    displayText(data.ToString());
+                    Console.WriteLine(data.ToString());
                 });
                 WebSocket.Open();
             }
@@ -104,8 +107,14 @@ namespace PilotClient
         private void connectedExampleFrm_SimConnectPositionChanged(object sender, EventArgs e)
         {
             PositionChangedEventArgs args = (PositionChangedEventArgs)e;
-            if (WebSocket != null)
-                WebSocket.Emit("position", "teste");
+            if (WebSocket != null && OAuthToken != null)
+                WebSocket.Emit(
+                    "position",
+                    String.Format("\"token\":\"{0}\",\"lat\":\"{1}\",\"lon\":\"{2}\",\"alt\":\"{3}\"",
+                        OAuthToken,
+                        args.position.latitude,
+                        args.position.longitude,
+                        args.position.altitude));
         }
     }
 }
