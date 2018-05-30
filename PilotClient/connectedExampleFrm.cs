@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using Quobject.SocketIoClientDotNet.Client;
 using System.Collections.Immutable;
+using Newtonsoft.Json;
 
 namespace PilotClient
 {   
@@ -71,9 +72,9 @@ namespace PilotClient
                 WebSocket = IO.Socket("http://37.59.115.154:8000/");
                 //WebSocket = IO.Socket("http://localhost:8000/");
                 //WebSocket = IO.Socket("https://fa-live.herokuapp.com/");
-                WebSocket.On("position", (data) =>
+                WebSocket.On("position", (object data) =>
                 {
-                    Console.WriteLine(data.ToString());
+                    Console.WriteLine(data);
                 });
                 WebSocket.Open();
             }
@@ -104,17 +105,16 @@ namespace PilotClient
             }
         }
 
-        private void connectedExampleFrm_SimConnectPositionChanged(object sender, EventArgs e)
+        private async void connectedExampleFrm_SimConnectPositionChanged(object sender, EventArgs e)
         {
             PositionChangedEventArgs args = (PositionChangedEventArgs)e;
             if (WebSocket != null && OAuthToken != null)
+            {
                 WebSocket.Emit(
                     "position",
-                    String.Format("\"token\":\"{0}\",\"lat\":\"{1}\",\"lon\":\"{2}\",\"alt\":\"{3}\"",
-                        OAuthToken,
-                        args.position.latitude,
-                        args.position.longitude,
-                        args.position.altitude));
+                    JsonConvert.SerializeObject(args.position));
+                await Task.Delay(75);
+            }
         }
     }
 }
