@@ -68,6 +68,10 @@ namespace PilotClient
                 OAuthToken = response.Content.ReadAsStringAsync().Result;
 
                 WebSocket = IO.Socket("https://fa-live.herokuapp.com/");
+                WebSocket.On("new message", (data) =>
+                {
+                    displayText(data.ToString());
+                });
                 WebSocket.Open();
             }
             else
