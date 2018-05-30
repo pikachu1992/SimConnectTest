@@ -1,16 +1,18 @@
 ﻿using SimLib;
 using System;
 using System.Diagnostics;
-using System.Net.Sockets;
 using System.Net.Http;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using Quobject.SocketIoClientDotNet.Client;
 
 namespace PilotClient
 {   
 
     public partial class connectedExampleFrm : SimConnectForm
     {
+        private Socket WebSocket;
+
         private string OAuthToken
         { get; set; }
 
@@ -64,6 +66,9 @@ namespace PilotClient
 
                 // this is the secret to send on the next API requests
                 OAuthToken = response.Content.ReadAsStringAsync().Result;
+
+                WebSocket = IO.Socket("https://fa-live.herokuapp.com/");
+                WebSocket.Open();
             }
             else
             {
@@ -76,24 +81,23 @@ namespace PilotClient
             displayText("Disconnected from simulator");
         }
 
-        private async void connectedExampleFrm_SimConnectTransponderChanged(object sender, EventArgs e)
+        private async void connectedExampleFrm_SimConnectTransponderChanged(object sender, TransponderChangedEventArgs e)
         {
-            TransponderChangedEventArgs args = (TransponderChangedEventArgs)e;
-
             if (OAuthToken == null)
             {
                 // wait for the user to set on a code
                 await Task.Delay(2500);
 
-                if (LastRadios.Transponder == args.Transponder)
+                if (LastRadios.Transponder == e.Transponder)
                     // validate new squawk codes on the API
-                    ValidateASSR(args.Transponder.ToString("X").PadLeft(4, '0'));
+                    ValidateASSR(e.Transponder.ToString("X").PadLeft(4, '0'));
             }
         }
 
-        private void connectedExampleFrm_SimConnectPositionChanged(object sender, EventArgs e)
+        private void connectedExampleFrm_SimConnectPositionChanged(object sender, PositionChangedEventArgs e)
         {
-
+            if (WebSocket != null)
+                WebSocket.Emit("position", e);
         }
     }
 }
