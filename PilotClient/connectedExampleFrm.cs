@@ -105,16 +105,10 @@ namespace PilotClient
             }
         }
 
-        private async void connectedExampleFrm_SimConnectPositionChanged(object sender, EventArgs e)
+        private async void btnGetPositionAsync_Click(object sender, EventArgs e)
         {
-            PositionChangedEventArgs args = (PositionChangedEventArgs)e;
-            if (WebSocket != null && OAuthToken != null)
-            {
-                WebSocket.Emit(
-                    "position",
-                    JsonConvert.SerializeObject(args.position));
-                await Task.Delay(75);
-            }
+            Position p = await GetPositionAsync();
+            displayText(JsonConvert.SerializeObject(p));
         }
     }
 }
