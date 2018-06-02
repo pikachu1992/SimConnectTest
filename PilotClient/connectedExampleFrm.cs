@@ -2,18 +2,18 @@
 using SimLib;
 using System;
 using System.Diagnostics;
-using System.Net.Http;
-using System.Net.WebSockets;
+using WebSocketSharp;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace PilotClient
 {
 
     public partial class connectedExampleFrm : SimConnectForm
     {
-        private ClientWebSocket WebSocket;
+        private WebSocket webSocket;
 
         private string OAuthToken
         { get; set; }
@@ -69,16 +69,13 @@ namespace PilotClient
                 // this is the secret to send on the next API requests
                 OAuthToken = response.Content.ReadAsStringAsync().Result;
 
-                Uri wsUri = new Uri("wss://echo.websocket.org");
+                webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/echo");
 
-                WebSocket = new ClientWebSocket();
-                await WebSocket.ConnectAsync(wsUri, CancellationToken.None);
-                await Task.WhenAll(Receive(WebSocket), Send(WebSocket));
+                webSocket.OnMessage += Receive;
 
-                //WebSocket = IO.Socket("http://37.59.115.154:8000/");
-                //WebSocket = IO.Socket("http://localhost:8000/");
-                //WebSocket = IO.Socket("https://fa-live.herokuapp.com/");
+                webSocket.Connect();
 
+                await Send();
                 
             }
             else
@@ -87,45 +84,30 @@ namespace PilotClient
             }
         }
 
-        private async Task Send(ClientWebSocket ws)
+        private async Task Send()
         {
-            while (ws.State == WebSocketState.Open)
+            while (webSocket.IsAlive)
             {
                 Position payload = await GetPositionAsync();
 
-                byte[] buff = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(payload));
-
-                await ws.SendAsync(new ArraySegment<byte>(buff), WebSocketMessageType.Text, false, CancellationToken.None);
+                webSocket.Send(JsonConvert.SerializeObject(payload));
 
                 int millisecondDelay = 1500;
                 await Task.Delay(millisecondDelay);
             }
         }
 
-        private async Task Receive(ClientWebSocket ws)
+        private void Receive(object sender, MessageEventArgs e)
         {
-            byte[] buff = new byte[2048];
-            while (ws.State == WebSocketState.Open)
-            {
-                var result = await ws.ReceiveAsync(new ArraySegment<byte>(buff), CancellationToken.None);
+            Position payload = JsonConvert.DeserializeObject<Position>(e.Data);
 
-                if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-                }
-                else
-                {
-                    Position payload = JsonConvert.DeserializeObject<Position>(Encoding.UTF8.GetString(buff).TrimEnd('\0'));
-
-                    displayText(JsonConvert.SerializeObject(payload));
-                }
-            }
+            displayText(JsonConvert.SerializeObject(payload));
         }
 
-        private async void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)
+        private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)
         {
-            if (WebSocket != null)
-                await WebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+            if (webSocket != null)
+                webSocket.Close();
             displayText("Disconnected from simulator");
         }
 
