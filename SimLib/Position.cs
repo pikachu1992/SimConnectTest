@@ -14,6 +14,7 @@ namespace SimLib
         public double altitude;
         public double pitch;
         public double bank;
+        public uint heading;
         public double airspeed;
     }
 }
