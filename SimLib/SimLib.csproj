@@ -51,9 +51,6 @@
     <Compile Include="SimConnectForm.AITraffic.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SimConnectForm.AITraffic.Designer.cs">
-      <DependentUpon>SimConnectForm.AITraffic.cs</DependentUpon>
-    </Compile>
     <Compile Include="SimConnectForm.Config.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,11 +72,6 @@
     <Compile Include="SimConnectForm.Events.cs">
       <SubType>Form</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="SimConnectForm.AITraffic.resx">
-      <DependentUpon>SimConnectForm.AITraffic.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
