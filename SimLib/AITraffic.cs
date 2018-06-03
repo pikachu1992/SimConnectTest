@@ -9,5 +9,12 @@ namespace SimLib
         // this is how you declare a fixed size string 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public String trafficID;
+        public double Latitude;
+        public double Longitude;
+        public double Altitude;
+        public int Bank;
+        public int Heading;
+        public int OnGround;
+        public int Airspeed;
     }
 }

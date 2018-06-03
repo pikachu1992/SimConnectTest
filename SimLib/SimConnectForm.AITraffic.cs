@@ -1,4 +1,5 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,10 +23,20 @@ namespace SimLib
             }
         }
 
-        public async Task<AITraffic> AddAITrafficAsync()
+        public async Task<AITraffic> AddAITrafficAsync(string callsign, double latitude, double longitude, double altitude, string type)
         {
             AITraffic = new TaskCompletionSource<AITraffic>();
-            simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.AiTraffic, DEFINITIONS.AiTraffic, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+
+            simconnect.AICreateNonATCAircraft(type, callsign, new SIMCONNECT_DATA_INITPOSITION(){
+                Latitude = latitude,
+                Longitude = longitude,
+                Altitude = altitude,
+                Pitch = -0,
+                Bank = -0,
+                Heading = 270,
+                OnGround = 1,
+                Airspeed = 0
+            }, DEFINITIONS.AiTraffic);
 
             return await AITraffic.Task;
         }

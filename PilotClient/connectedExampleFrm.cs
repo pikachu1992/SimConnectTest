@@ -90,7 +90,7 @@ namespace PilotClient
             {
                 Position payload = await GetPositionAsync();
 
-                AITraffic traffic = await AddAITrafficAsync();
+                AITraffic traffic = await AddAITrafficAsync("TSZ001", 38.76697, -9.143276, 500, "Airbus A321");
 
                 webSocket.Send(JsonConvert.SerializeObject(payload));
 
