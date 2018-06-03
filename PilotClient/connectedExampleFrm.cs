@@ -69,7 +69,7 @@ namespace PilotClient
                 // this is the secret to send on the next API requests
                 OAuthToken = response.Content.ReadAsStringAsync().Result;
 
-                webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/echo");
+                webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/chat");
 
                 webSocket.OnMessage += Receive;
 
@@ -90,26 +90,20 @@ namespace PilotClient
             {
                 Position payload = await GetPositionAsync();
 
-                AITraffic traffic = await AddAITrafficAsync("TSZ001", 38.76697, -9.143276, 500, "Airbus A321");
-
                 webSocket.Send(JsonConvert.SerializeObject(payload));
-
-                webSocket.Send(JsonConvert.SerializeObject(traffic));
 
                 int millisecondDelay = 1500;
                 await Task.Delay(millisecondDelay);
             }
         }
 
-        private void Receive(object sender, MessageEventArgs e)
+        private async void Receive(object sender, MessageEventArgs e)
         {
             Position payload = JsonConvert.DeserializeObject<Position>(e.Data);
 
-            AITraffic traffic = JsonConvert.DeserializeObject<AITraffic>(e.Data);
+            uint trafficId = await AddAITrafficAsync(payload);
 
-            displayText(JsonConvert.SerializeObject(payload));
-
-            displayText(JsonConvert.SerializeObject(traffic));
+            displayText(trafficId.ToString());
         }
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)

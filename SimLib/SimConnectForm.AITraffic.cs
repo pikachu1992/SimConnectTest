@@ -1,6 +1,4 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
-using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -8,43 +6,30 @@ namespace SimLib
 {
     public partial class SimConnectForm : Form
     {
-        private TaskCompletionSource<AITraffic> AITraffic;
+        private TaskCompletionSource<uint> addTrafficTask;
 
-        public void RegisterAircraft()
+        public async Task<uint> AddAITrafficAsync(Position position)
         {
-            try
-            {
-                simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.AiTraffic, DEFINITIONS.AiTraffic, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+            addTrafficTask = new TaskCompletionSource<uint>();
 
-            }
-            catch (COMException ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<AITraffic> AddAITrafficAsync(string callsign, double latitude, double longitude, double altitude, string type)
-        {
-            AITraffic = new TaskCompletionSource<AITraffic>();
-
-            simconnect.AICreateNonATCAircraft(type, callsign, new SIMCONNECT_DATA_INITPOSITION(){
-                Latitude = latitude,
-                Longitude = longitude,
-                Altitude = altitude,
-                Pitch = -0,
-                Bank = -0,
-                Heading = 270,
-                OnGround = 1,
-                Airspeed = 0
+            simconnect.AICreateNonATCAircraft("", position.title, new SIMCONNECT_DATA_INITPOSITION(){
+                Latitude = position.latitude,
+                Longitude = position.longitude,
+                Altitude = position.altitude,
+                Pitch = position.pitch,
+                Bank = position.bank,
+                Heading = position.heading,
+                OnGround = 0,
+                Airspeed = position.airspeed
             }, DEFINITIONS.AiTraffic);
 
-            return await AITraffic.Task;
+            return await addTrafficTask.Task;
         }
 
-        private void OnRecvAITraffic(object sender, AITraffic traffic)
+        private void OnRecvAITraffic(object sender, uint trafficId)
         {
-            if (AITraffic != null)
-                AITraffic.SetResult(traffic);
+            if (addTrafficTask != null)
+                addTrafficTask.SetResult(trafficId);
         }
     }
 }

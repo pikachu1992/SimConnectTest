@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AITraffic.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="SimConnectForm.AITraffic.cs">
       <SubType>Form</SubType>
