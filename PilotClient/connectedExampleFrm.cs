@@ -90,7 +90,11 @@ namespace PilotClient
             {
                 Position payload = await GetPositionAsync();
 
+                AITraffic traffic = await AddAITrafficAsync();
+
                 webSocket.Send(JsonConvert.SerializeObject(payload));
+
+                webSocket.Send(JsonConvert.SerializeObject(traffic));
 
                 int millisecondDelay = 1500;
                 await Task.Delay(millisecondDelay);
@@ -101,7 +105,11 @@ namespace PilotClient
         {
             Position payload = JsonConvert.DeserializeObject<Position>(e.Data);
 
+            AITraffic traffic = JsonConvert.DeserializeObject<AITraffic>(e.Data);
+
             displayText(JsonConvert.SerializeObject(payload));
+
+            displayText(JsonConvert.SerializeObject(traffic));
         }
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)

@@ -79,6 +79,9 @@ namespace SimLib
                     case DATA_REQUESTS.Position:
                         OnRecvPosition(sender, (Position)data.dwData[0]);
                         break;
+                    case DATA_REQUESTS.AiTraffic:
+                        OnRecvAITraffic(sender, (AITraffic)data.dwData[0]);
+                        break;
                     default:
                         break;
                 }
