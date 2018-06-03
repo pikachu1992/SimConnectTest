@@ -69,7 +69,7 @@ namespace PilotClient
                 // this is the secret to send on the next API requests
                 OAuthToken = response.Content.ReadAsStringAsync().Result;
 
-                webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/echo");
+                webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/chat");
 
                 webSocket.OnMessage += Receive;
 
@@ -97,11 +97,13 @@ namespace PilotClient
             }
         }
 
-        private void Receive(object sender, MessageEventArgs e)
+        private async void Receive(object sender, MessageEventArgs e)
         {
             Position payload = JsonConvert.DeserializeObject<Position>(e.Data);
 
-            displayText(JsonConvert.SerializeObject(payload));
+            uint trafficId = await AddAITrafficAsync(payload);
+
+            displayText(trafficId.ToString());
         }
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)

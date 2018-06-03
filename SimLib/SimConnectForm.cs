@@ -23,13 +23,15 @@ namespace SimLib
         enum DEFINITIONS
         {
             Radios,
-            Position
+            Position,
+            AiTraffic
         }
 
         enum DATA_REQUESTS
         {
             Radios,
-            Position
+            Position,
+            AiTraffic
         }
 
         /// <summary>
