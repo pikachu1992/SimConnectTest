@@ -7,8 +7,17 @@ namespace SimLib
 {
     public partial class SimConnectForm : Form
     {
+        enum DEFINITIONS
+        {
+            Radios,
+            Position,
+            AiTraffic
+        }
+
         public void RegisterDataDefinitions()
         {
+            Position.Register(simconnect, DEFINITIONS.Position);
+
             // register data structures
             simconnect.AddToDataDefinition(
                 DEFINITIONS.Radios,
