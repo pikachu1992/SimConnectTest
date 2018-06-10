@@ -30,7 +30,6 @@ namespace SimLib
             uint radius = 0,
             SIMCONNECT_SIMOBJECT_TYPE type = SIMCONNECT_SIMOBJECT_TYPE.USER)
         {
-
             TaskCompletionSource<T> task = new TaskCompletionSource<T>();
 
             SimConnectWrapper.Sim.
@@ -39,10 +38,12 @@ namespace SimLib
                 (DEFINITIONS)SimConnectWrapper.typeMap[typeof(T)],
                 radius,
                 type);
-
             tasks.Add(task.Task.Id, task);
+            
+            T result = await task.Task;
 
-            return await task.Task;
+            tasks.Remove(task.Task.Id);
+            return result;
         }
 
         public static void Register(Field[] fields)
