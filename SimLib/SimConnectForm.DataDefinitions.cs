@@ -16,44 +16,40 @@ namespace SimLib
 
         public void RegisterDataDefinitions()
         {
-            Position.Register(simconnect, DEFINITIONS.Position);
-
-            // register data structures
-            simconnect.AddToDataDefinition(
-                DEFINITIONS.Radios,
-                "TRANSPONDER CODE:1",
-                "BCO16",
-                SIMCONNECT_DATATYPE.INT32,
-                0.0f,
-                SimConnect.SIMCONNECT_UNUSED);
-            simconnect.RegisterDataDefineStruct<Radios>(DEFINITIONS.Radios);
-
-            simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
-        }
-
-        private void OnRecvRadios(object sender, Radios radios)
-        {
-            if (LastRadios.Transponder != radios.Transponder)
+            SimObjectType<Position>.Register(new SimObjectType<Position>.Field[]
             {
-                LastRadios.Transponder = radios.Transponder;
-                SimConnectTransponderChanged(sender, new TransponderChangedEventArgs() { Transponder = radios.Transponder });
-            }
-            simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Radios, DEFINITIONS.Radios, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
-        }
+                new SimObjectType<Position>.Field()
+                { DatumName = "Title", UnitsName = null,
+                    DatumType = SIMCONNECT_DATATYPE.STRING256 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "PLANE LATITUDE", UnitsName = "degrees",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "PLANE LONGITUDE", UnitsName = "degrees",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "PLANE ALTITUDE", UnitsName = "feet",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "PLANE PITCH DEGREES", UnitsName = "degrees",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "PLANE BANK DEGREES", UnitsName = "degrees",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "PLANE HEADING DEGREES TRUE", UnitsName = "degrees",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                new SimObjectType<Position>.Field()
+                { DatumName = "AIRSPEED TRUE", UnitsName = "knots",
+                    DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+            });
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct Radios
-        {
-            public int Transponder;
+            SimObjectType<Radios>.Register(new SimObjectType<Radios>.Field[]
+            {
+                new SimObjectType<Radios>.Field()
+                { DatumName = "TRANSPONDER CODE:1", UnitsName = "BCO16",
+                    DatumType = SIMCONNECT_DATATYPE.INT32 },
+            });
         }
-
-        public Radios LastRadios;
-
-        public class TransponderChangedEventArgs : EventArgs
-        {
-            public int Transponder
-            { get; internal set; }
-        }
-        public event EventHandler SimConnectTransponderChanged;
     }
 }

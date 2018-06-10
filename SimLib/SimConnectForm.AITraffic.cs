@@ -12,7 +12,7 @@ namespace SimLib
         {
             addTrafficTask = new TaskCompletionSource<uint>();
 
-            simconnect.AICreateNonATCAircraft("", position.title, new SIMCONNECT_DATA_INITPOSITION(){
+            SimConnectWrapper.Sim.AICreateNonATCAircraft("", position.title, new SIMCONNECT_DATA_INITPOSITION(){
                 Latitude = position.latitude,
                 Longitude = position.longitude,
                 Altitude = position.altitude,

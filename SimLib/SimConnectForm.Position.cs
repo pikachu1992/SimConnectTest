@@ -11,7 +11,7 @@ namespace SimLib
         public async Task<Position> GetPositionAsync()
         {
             PositionTask = new TaskCompletionSource<Position>();
-            simconnect.RequestDataOnSimObjectType(DATA_REQUESTS.Position, DEFINITIONS.Position, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+            SimConnectWrapper.Sim.RequestDataOnSimObjectType(DATA_REQUESTS.Position, DEFINITIONS.Position, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
 
             return await PositionTask.Task;
         }

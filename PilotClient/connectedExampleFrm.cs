@@ -113,23 +113,11 @@ namespace PilotClient
             displayText("Disconnected from simulator");
         }
 
-        private async void connectedExampleFrm_SimConnectTransponderChanged(object sender, EventArgs e)
-        {
-            TransponderChangedEventArgs args = (TransponderChangedEventArgs)e;
-            if (OAuthToken == null)
-            {
-                // wait for the user to set on a code
-                await Task.Delay(2500);
-
-                if (LastRadios.Transponder == args.Transponder)
-                    // validate new squawk codes on the API
-                    ValidateASSR(args.Transponder.ToString("X").PadLeft(4, '0'));
-            }
-        }
-
         private async void btnGetPositionAsync_Click(object sender, EventArgs e)
         {
-            Position p = await GetPositionAsync();
+            Position p = await SimObjectType<Position>.GetAsync(
+                0,
+                Microsoft.FlightSimulator.SimConnect.SIMCONNECT_SIMOBJECT_TYPE.USER);
             displayText(JsonConvert.SerializeObject(p));
         }
     }

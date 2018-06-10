@@ -18,6 +18,7 @@ namespace SimLib
         public double heading;
         public uint airspeed;
 
+
         public static void Register(SimConnect sim, Enum defineID)
         {
             try

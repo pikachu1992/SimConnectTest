@@ -15,11 +15,6 @@ namespace SimLib
         /// </summary>
         private const int WM_USER_SIMCONNECT = 0x0402;
 
-        /// <summary>
-        /// Internal SimConnect object
-        /// </summary>
-        private SimConnect simconnect = null;
-
         enum DATA_REQUESTS
         {
             Radios,
@@ -35,9 +30,9 @@ namespace SimLib
         {
             if (m.Msg == WM_USER_SIMCONNECT)
             {
-                if (simconnect != null)
+                if (SimConnectWrapper.Sim != null)
                 {
-                    simconnect.ReceiveMessage();
+                    SimConnectWrapper.Sim.ReceiveMessage();
                 }
             }
             else
@@ -53,15 +48,16 @@ namespace SimLib
         /// </summary>
         public async void OpenSimConnect()
         {
-            while (simconnect == null)
+            while (SimConnectWrapper.Sim == null)
             {
                 try
                 {
                     // the constructor is similar to SimConnect_Open in the native API 
-                    simconnect = new SimConnect("SimLib.SimLibSimConnect", Handle, WM_USER_SIMCONNECT, null, 0);
+                    SimConnectWrapper.Sim = new SimConnect("SimLib.SimLibSimConnect", Handle, WM_USER_SIMCONNECT, null, 0);
 
-                    RegisterEvents();
                     RegisterDataDefinitions();
+
+                    //RegisterEvents();
                 }
                 catch (COMException)
                 {
@@ -76,10 +72,10 @@ namespace SimLib
         /// </summary>
         private void DisposeSimConnect()
         {
-            if (simconnect != null)
+            if (SimConnectWrapper.Sim != null)
             {
-                simconnect.Dispose();
-                simconnect = null;
+                SimConnectWrapper.Sim.Dispose();
+                SimConnectWrapper.Sim = null;
             }
         }
 
@@ -96,7 +92,7 @@ namespace SimLib
 
         private async void WatchSimConnect()
         {
-            while (simconnect != null)
+            while (SimConnectWrapper.Sim != null)
             {
                 try
                 {

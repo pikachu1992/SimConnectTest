@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Radios.cs" />
+    <Compile Include="SimObjectType.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="SimConnectForm.AITraffic.cs">
       <SubType>Form</SubType>
@@ -65,6 +67,7 @@
     <Compile Include="SimConnectForm.Position.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SimConnectWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SimConnectForm.Events.cs">
