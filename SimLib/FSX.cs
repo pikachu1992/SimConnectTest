@@ -1,10 +1,11 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SimLib
 {
-    public static class SimConnectWrapper
+    public static class FSX
     {
         public static SimConnect Sim;
 

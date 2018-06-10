@@ -9,7 +9,7 @@ namespace SimLib
 
     public enum DEFINITIONS { }
 
-    public class SimObjectType<T>
+    public static class SimObjectType<T>
     {
         public struct Field
         {
@@ -32,13 +32,13 @@ namespace SimLib
         {
             TaskCompletionSource<T> task = new TaskCompletionSource<T>();
 
-            SimConnectWrapper.Sim.
+            tasks.Add(task.Task.Id, task);
+            FSX.Sim.
                 RequestDataOnSimObjectType(
                 (REQUESTS)task.Task.Id,
-                (DEFINITIONS)SimConnectWrapper.typeMap[typeof(T)],
+                (DEFINITIONS)FSX.typeMap[typeof(T)],
                 radius,
                 type);
-            tasks.Add(task.Task.Id, task);
             
             T result = await task.Task;
 
@@ -48,14 +48,14 @@ namespace SimLib
 
         public static void Register(Field[] fields)
         {
-            int defineId = SimConnectWrapper.idMap.Count;
+            int defineId = FSX.idMap.Count;
 
             try
             {
-                // register all fields in SimConnectWrapper.Sim
+                // register all fields in FSX.Sim
                 // TODO: lookup type decorated fields using reflection
                 foreach (Field field in fields)
-                    SimConnectWrapper.Sim.
+                    FSX.Sim.
                         AddToDataDefinition((DEFINITIONS)defineId,
                                             field.DatumName,
                                             field.UnitsName,
@@ -63,10 +63,10 @@ namespace SimLib
                                             0.0f,
                                             SimConnect.SIMCONNECT_UNUSED);
 
-                SimConnectWrapper.Sim.
+                FSX.Sim.
                     RegisterDataDefineStruct<T>((DEFINITIONS)defineId);
 
-                SimConnectWrapper.Sim.OnRecvSimobjectDataBytype +=
+                FSX.Sim.OnRecvSimobjectDataBytype +=
                     Sim_OnRecvSimobjectDataBytype;
             }
             catch (COMException ex)
@@ -74,8 +74,8 @@ namespace SimLib
                 throw ex;
             }
 
-            SimConnectWrapper.idMap.Add(defineId, typeof(T));
-            SimConnectWrapper.typeMap.Add(typeof(T), defineId);
+            FSX.idMap.Add(defineId, typeof(T));
+            FSX.typeMap.Add(typeof(T), defineId);
         }
 
         private static void Sim_OnRecvSimobjectDataBytype(

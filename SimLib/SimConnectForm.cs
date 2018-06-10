@@ -15,13 +15,6 @@ namespace SimLib
         /// </summary>
         private const int WM_USER_SIMCONNECT = 0x0402;
 
-        enum DATA_REQUESTS
-        {
-            Radios,
-            Position,
-            AiTraffic
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -30,9 +23,9 @@ namespace SimLib
         {
             if (m.Msg == WM_USER_SIMCONNECT)
             {
-                if (SimConnectWrapper.Sim != null)
+                if (FSX.Sim != null)
                 {
-                    SimConnectWrapper.Sim.ReceiveMessage();
+                    FSX.Sim.ReceiveMessage();
                 }
             }
             else
@@ -48,12 +41,12 @@ namespace SimLib
         /// </summary>
         public async void OpenSimConnect()
         {
-            while (SimConnectWrapper.Sim == null)
+            while (FSX.Sim == null)
             {
                 try
                 {
                     // the constructor is similar to SimConnect_Open in the native API 
-                    SimConnectWrapper.Sim = new SimConnect("SimLib.SimLibSimConnect", Handle, WM_USER_SIMCONNECT, null, 0);
+                    FSX.Sim = new SimConnect("SimLib.SimLibSimConnect", Handle, WM_USER_SIMCONNECT, null, 0);
 
                     // Register data definitions
                     SimObjectType<Position>.Register(new SimObjectType<Position>.Field[]
@@ -106,10 +99,10 @@ namespace SimLib
         /// </summary>
         private void DisposeSimConnect()
         {
-            if (SimConnectWrapper.Sim != null)
+            if (FSX.Sim != null)
             {
-                SimConnectWrapper.Sim.Dispose();
-                SimConnectWrapper.Sim = null;
+                FSX.Sim.Dispose();
+                FSX.Sim = null;
             }
         }
 
@@ -126,7 +119,7 @@ namespace SimLib
 
         private async void WatchSimConnect()
         {
-            while (SimConnectWrapper.Sim != null)
+            while (FSX.Sim != null)
             {
                 try
                 {
