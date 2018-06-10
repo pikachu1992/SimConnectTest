@@ -21,7 +21,7 @@ namespace SimLib
                 Heading = position.heading,
                 OnGround = 0,
                 Airspeed = position.airspeed
-            }, DEFINITIONS.AiTraffic);
+            }, (DEFINITIONS)2);
 
             return await addTrafficTask.Task;
         }

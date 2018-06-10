@@ -88,7 +88,7 @@ namespace PilotClient
         {
             while (webSocket.IsAlive)
             {
-                Position payload = await GetPositionAsync();
+                Position payload = await SimObjectType<Position>.GetAsync();
 
                 webSocket.Send(JsonConvert.SerializeObject(payload));
 
@@ -115,10 +115,14 @@ namespace PilotClient
 
         private async void btnGetPositionAsync_Click(object sender, EventArgs e)
         {
-            Position p = await SimObjectType<Position>.GetAsync(
-                0,
-                Microsoft.FlightSimulator.SimConnect.SIMCONNECT_SIMOBJECT_TYPE.USER);
+            Position p = await SimObjectType<Position>.GetAsync();
             displayText(JsonConvert.SerializeObject(p));
+        }
+
+        private async void btnGeXpndrAsync_Click(object sender, EventArgs e)
+        {
+            Radios r = await SimObjectType<Radios>.GetAsync();
+            displayText(JsonConvert.SerializeObject(r));
         }
     }
 }

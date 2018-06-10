@@ -30,6 +30,7 @@
         {
             this.txtLog = new System.Windows.Forms.RichTextBox();
             this.btnGetPositionAsync = new System.Windows.Forms.Button();
+            this.btnGetXpndrAsync = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtLog
@@ -46,7 +47,7 @@
             // btnGetPositionAsync
             // 
             this.btnGetPositionAsync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGetPositionAsync.Location = new System.Drawing.Point(408, 528);
+            this.btnGetPositionAsync.Location = new System.Drawing.Point(213, 528);
             this.btnGetPositionAsync.Name = "btnGetPositionAsync";
             this.btnGetPositionAsync.Size = new System.Drawing.Size(98, 23);
             this.btnGetPositionAsync.TabIndex = 1;
@@ -54,11 +55,23 @@
             this.btnGetPositionAsync.UseVisualStyleBackColor = true;
             this.btnGetPositionAsync.Click += new System.EventHandler(this.btnGetPositionAsync_Click);
             // 
+            // btnGetXpndrAsync
+            // 
+            this.btnGetXpndrAsync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetXpndrAsync.Location = new System.Drawing.Point(317, 528);
+            this.btnGetXpndrAsync.Name = "btnGetXpndrAsync";
+            this.btnGetXpndrAsync.Size = new System.Drawing.Size(98, 23);
+            this.btnGetXpndrAsync.TabIndex = 1;
+            this.btnGetXpndrAsync.Text = "GetXpndrAsnc";
+            this.btnGetXpndrAsync.UseVisualStyleBackColor = true;
+            this.btnGetXpndrAsync.Click += new System.EventHandler(this.btnGeXpndrAsync_Click);
+            // 
             // connectedExampleFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(518, 563);
+            this.Controls.Add(this.btnGetXpndrAsync);
             this.Controls.Add(this.btnGetPositionAsync);
             this.Controls.Add(this.txtLog);
             this.Name = "connectedExampleFrm";
@@ -73,6 +86,7 @@
 
         private System.Windows.Forms.RichTextBox txtLog;
         private System.Windows.Forms.Button btnGetPositionAsync;
+        private System.Windows.Forms.Button btnGetXpndrAsync;
     }
 }
 

@@ -26,8 +26,9 @@ namespace SimLib
         private static Dictionary<int, TaskCompletionSource<T>> tasks =
             new Dictionary<int, TaskCompletionSource<T>>();
 
-        public static async Task<T> GetAsync(uint radius,
-                                             SIMCONNECT_SIMOBJECT_TYPE type)
+        public static async Task<T> GetAsync(
+            uint radius = 0,
+            SIMCONNECT_SIMOBJECT_TYPE type = SIMCONNECT_SIMOBJECT_TYPE.USER)
         {
 
             TaskCompletionSource<T> task = new TaskCompletionSource<T>();
