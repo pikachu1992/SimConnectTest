@@ -49,30 +49,30 @@ namespace SimLib
                     FSX.Sim = new SimConnect("SimLib.SimLibSimConnect", Handle, WM_USER_SIMCONNECT, null, 0);
 
                     // Register data definitions
-                    SimObjectType<Position>.Register(new SimObjectType<Position>.Field[]
+                    SimObjectType<AircraftState>.Register(new SimObjectType<AircraftState>.Field[]
                     {
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "Title", UnitsName = null,
                             DatumType = SIMCONNECT_DATATYPE.STRING256 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE LATITUDE", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE LONGITUDE", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE ALTITUDE", UnitsName = "feet",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE PITCH DEGREES", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE BANK DEGREES", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE HEADING DEGREES TRUE", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
-                        new SimObjectType<Position>.Field()
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "AIRSPEED TRUE", UnitsName = "knots",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                     });

@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Radios.cs" />
     <Compile Include="SimObjectType.cs" />
-    <Compile Include="Position.cs" />
+    <Compile Include="AircraftState.cs" />
     <Compile Include="SimConnectForm.AITraffic.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -88,9 +88,9 @@ namespace PilotClient
         {
             while (webSocket.IsAlive)
             {
-                Position payload = await SimObjectType<Position>.GetAsync();
+                Player.State = await SimObjectType<AircraftState>.GetAsync();
 
-                webSocket.Send(JsonConvert.SerializeObject(payload));
+                webSocket.Send(JsonConvert.SerializeObject(Player));
 
                 int millisecondDelay = 1500;
                 await Task.Delay(millisecondDelay);
@@ -99,9 +99,9 @@ namespace PilotClient
 
         private async void Receive(object sender, MessageEventArgs e)
         {
-            Position payload = JsonConvert.DeserializeObject<Position>(e.Data);
+            Aircraft srvPlayer = JsonConvert.DeserializeObject<Aircraft>(e.Data);
 
-            uint trafficId = await AddAITrafficAsync(payload);
+            uint trafficId = await AddAITrafficAsync(srvPlayer);
 
             displayText(trafficId.ToString());
         }
@@ -113,10 +113,15 @@ namespace PilotClient
             displayText("Disconnected from simulator");
         }
 
+        static Aircraft Player = new Aircraft()
+        {
+            Callsign = "TSZ213"
+        };
+
         private async void btnGetPositionAsync_Click(object sender, EventArgs e)
         {
-            Position p = await SimObjectType<Position>.GetAsync();
-            displayText(JsonConvert.SerializeObject(p));
+            Player.State = await SimObjectType<AircraftState>.GetAsync();
+            displayText(JsonConvert.SerializeObject(Player));
         }
 
         private async void btnGeXpndrAsync_Click(object sender, EventArgs e)

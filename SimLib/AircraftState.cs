@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace SimLib
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-    public class Position
+    public class AircraftState
     {
         // this is how you declare a fixed size string 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]

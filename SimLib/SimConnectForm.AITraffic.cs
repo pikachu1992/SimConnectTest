@@ -8,19 +8,19 @@ namespace SimLib
     {
         private TaskCompletionSource<uint> addTrafficTask;
 
-        public async Task<uint> AddAITrafficAsync(Position position)
+        public async Task<uint> AddAITrafficAsync(dynamic position)
         {
             addTrafficTask = new TaskCompletionSource<uint>();
 
-            FSX.Sim.AICreateNonATCAircraft("", position.title, new SIMCONNECT_DATA_INITPOSITION(){
-                Latitude = position.latitude,
-                Longitude = position.longitude,
-                Altitude = position.altitude,
-                Pitch = position.pitch,
-                Bank = position.bank,
-                Heading = position.heading,
+            FSX.Sim.AICreateNonATCAircraft("model", position.Calsign, new SIMCONNECT_DATA_INITPOSITION(){
+                Latitude = position.State.latitude,
+                Longitude = position.State.longitude,
+                Altitude = position.State.altitude,
+                Pitch = position.State.pitch,
+                Bank = position.State.bank,
+                Heading = position.State.heading,
                 OnGround = 0,
-                Airspeed = position.airspeed
+                Airspeed = position.State.airspeed
             }, (DEFINITIONS)2);
 
             return await addTrafficTask.Task;
