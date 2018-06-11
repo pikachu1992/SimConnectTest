@@ -26,7 +26,10 @@ namespace SimLib
         private static Dictionary<int, TaskCompletionSource<T>> tasks =
             new Dictionary<int, TaskCompletionSource<T>>();
 
-        public static async Task<T> GetAsync(
+        private static Dictionary<int, TaskCompletionSource<int>> objectIdTasks =
+            new Dictionary<int, TaskCompletionSource<int>>();
+
+        public static async Task<T> RequestDataOnSimObjectType(
             uint radius = 0,
             SIMCONNECT_SIMOBJECT_TYPE type = SIMCONNECT_SIMOBJECT_TYPE.USER)
         {
@@ -43,6 +46,35 @@ namespace SimLib
             T result = await task.Task;
 
             tasks.Remove(task.Task.Id);
+            return result;
+        }
+
+        public static async Task<int> AICreateNonATCAircraft(string modelName,
+                                                             string callsign,
+                                                             AircraftState state)
+        {
+            TaskCompletionSource<int> task = new TaskCompletionSource<int>();
+
+            objectIdTasks.Add(task.Task.Id, task);
+            FSX.Sim.
+                AICreateNonATCAircraft(modelName,
+                                       callsign,
+                                       new SIMCONNECT_DATA_INITPOSITION()
+                                       {
+                                           Latitude = state.latitude,
+                                           Longitude = state.longitude,
+                                           Altitude = state.altitude,
+                                           Pitch = state.pitch,
+                                           Bank = state.bank,
+                                           Heading = state.heading,
+                                           OnGround = 0,
+                                           Airspeed = state.airspeed
+                                       },
+                                       (REQUESTS)task.Task.Id);
+
+            int result = await task.Task;
+
+            objectIdTasks.Remove(task.Task.Id);
             return result;
         }
 
@@ -68,6 +100,7 @@ namespace SimLib
 
                 FSX.Sim.OnRecvSimobjectDataBytype +=
                     Sim_OnRecvSimobjectDataBytype;
+                FSX.Sim.OnRecvAssignedObjectId += Sim_OnRecvAssignedObjectId;
             }
             catch (COMException ex)
             {
@@ -76,6 +109,17 @@ namespace SimLib
 
             FSX.idMap.Add(defineId, typeof(T));
             FSX.typeMap.Add(typeof(T), defineId);
+        }
+
+        private static void Sim_OnRecvAssignedObjectId(
+            SimConnect sender,
+            SIMCONNECT_RECV_ASSIGNED_OBJECT_ID data)
+        {
+            TaskCompletionSource<int> task;
+            objectIdTasks.TryGetValue((int)data.dwRequestID, out task);
+
+            if (task != null)
+                task.TrySetResult((int)data.dwObjectID);
         }
 
         private static void Sim_OnRecvSimobjectDataBytype(

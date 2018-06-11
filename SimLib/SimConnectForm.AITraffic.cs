@@ -12,7 +12,7 @@ namespace SimLib
         {
             addTrafficTask = new TaskCompletionSource<uint>();
 
-            FSX.Sim.AICreateNonATCAircraft("model", position.Calsign, new SIMCONNECT_DATA_INITPOSITION(){
+            FSX.Sim.AICreateNonATCAircraft("Mooney Bravo Retro", position.Callsign, new SIMCONNECT_DATA_INITPOSITION(){
                 Latitude = position.State.latitude,
                 Longitude = position.State.longitude,
                 Altitude = position.State.altitude,

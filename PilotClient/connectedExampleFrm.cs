@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Collections.Generic;
 
 namespace PilotClient
 {
@@ -88,22 +89,38 @@ namespace PilotClient
         {
             while (webSocket.IsAlive)
             {
-                Player.State = await SimObjectType<AircraftState>.GetAsync();
+                Player.State = await SimObjectType<AircraftState>.
+                    RequestDataOnSimObjectType();
 
-                webSocket.Send(JsonConvert.SerializeObject(Player));
+                string data = JsonConvert.SerializeObject(Player);
+
+                webSocket.Send(data);
 
                 int millisecondDelay = 1500;
                 await Task.Delay(millisecondDelay);
             }
         }
 
+        private static Dictionary<string, Aircraft> airTraffic = new Dictionary<string, Aircraft>();
+
         private async void Receive(object sender, MessageEventArgs e)
         {
             Aircraft srvPlayer = JsonConvert.DeserializeObject<Aircraft>(e.Data);
+            Aircraft existingPlayer = null;
+            airTraffic.TryGetValue(srvPlayer.Callsign, out existingPlayer);
+            if (existingPlayer != null)
+            {
+                srvPlayer.ObjectId = existingPlayer.ObjectId;
+            }
+            else
+            {
+                int trafficId = await SimObjectType<AircraftState>.
+                    AICreateNonATCAircraft("", srvPlayer.Callsign, srvPlayer.State);
+                srvPlayer.ObjectId = trafficId;
+                airTraffic.Add(srvPlayer.Callsign, srvPlayer);
+            }
 
-            uint trafficId = await AddAITrafficAsync(srvPlayer);
-
-            displayText(trafficId.ToString());
+            displayText(srvPlayer.ObjectId.ToString());
         }
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)
@@ -120,14 +137,26 @@ namespace PilotClient
 
         private async void btnGetPositionAsync_Click(object sender, EventArgs e)
         {
-            Player.State = await SimObjectType<AircraftState>.GetAsync();
+            Player.State = await SimObjectType<AircraftState>.
+                RequestDataOnSimObjectType();
             displayText(JsonConvert.SerializeObject(Player));
         }
 
         private async void btnGeXpndrAsync_Click(object sender, EventArgs e)
         {
-            Radios r = await SimObjectType<Radios>.GetAsync();
-            displayText(JsonConvert.SerializeObject(r));
+            Radios r = await SimObjectType<Radios>.RequestDataOnSimObjectType();
+            displayText(JsonConvert.SerializeObject(r.Transponder.ToString("X3")));
+        }
+
+        private async void btnConnect_Click(object sender, EventArgs e)
+        {
+            webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/chat");
+
+            webSocket.OnMessage += Receive;
+
+            webSocket.Connect();
+
+            await Send();
         }
     }
 }

@@ -5,7 +5,7 @@ namespace PilotClient
     public class Aircraft
     {
         public string Callsign;
-        public uint ObjectId;
+        public int ObjectId;
         public AircraftState State;
     }
 }
