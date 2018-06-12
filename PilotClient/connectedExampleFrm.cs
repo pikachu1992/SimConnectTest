@@ -44,55 +44,18 @@ namespace PilotClient
             txtLog.Text = output;
         }
 
-        private void connectedExampleFrm_SimConnectOpen(object sender, EventArgs e)
+        private async void connectedExampleFrm_SimConnectOpen(object sender, EventArgs e)
         {
-            // sim opened, send user to login form
-            Process.Start("http://37.59.115.154/html/login.html");
-        }
-
-        /// <summary>
-        /// Validates a given ASSR code on the Auth API token endpoint, populates OAuthToken when a valid squawk code is set
-        /// </summary>
-        /// <param name="ASSR"></param>
-        private async void ValidateASSR(string ASSR)
-        {
-            HttpClient client = new HttpClient();
-
-            client.BaseAddress = new Uri("https://fa-authapi.herokuapp.com");
-
-            HttpResponseMessage response = await client.GetAsync("/token/" + ASSR);
-
-
-            if ((int)response.StatusCode == 200)
-            {
-                // logged in
-
-                // this is the secret to send on the next API requests
-                OAuthToken = response.Content.ReadAsStringAsync().Result;
-
-                webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/chat");
-
-                webSocket.OnMessage += Receive;
-
-                webSocket.Connect();
-
-                await Send();
-                
-            }
-            else
-            {
-                OAuthToken = null; // not sure
-            }
+            FSX.Player.Callsign = "TSZ213";
         }
 
         private async Task Send()
         {
             while (webSocket.IsAlive)
             {
-                Player.State = await SimObjectType<AircraftState>.
-                    RequestDataOnSimObjectType();
+                FSX.Aircraft player = await FSX.Player.Get();
 
-                string data = JsonConvert.SerializeObject(Player);
+                string data = JsonConvert.SerializeObject(player);
 
                 webSocket.Send(data);
 
@@ -101,26 +64,12 @@ namespace PilotClient
             }
         }
 
-        private static Dictionary<string, Aircraft> airTraffic = new Dictionary<string, Aircraft>();
-
         private async void Receive(object sender, MessageEventArgs e)
         {
-            Aircraft srvPlayer = JsonConvert.DeserializeObject<Aircraft>(e.Data);
-            Aircraft existingPlayer = null;
-            airTraffic.TryGetValue(srvPlayer.Callsign, out existingPlayer);
-            if (existingPlayer != null)
-            {
-                srvPlayer.ObjectId = existingPlayer.ObjectId;
-            }
-            else
-            {
-                int trafficId = await SimObjectType<AircraftState>.
-                    AICreateNonATCAircraft("", srvPlayer.Callsign, srvPlayer.State);
-                srvPlayer.ObjectId = trafficId;
-                airTraffic.Add(srvPlayer.Callsign, srvPlayer);
-            }
+            FSX.Aircraft traffic = JsonConvert.DeserializeObject<FSX.Aircraft>(
+                e.Data);
 
-            displayText(srvPlayer.ObjectId.ToString());
+            FSX.Traffic.Set(traffic);
         }
 
         private void connectedExampleFrm_SimConnectClosed(object sender, EventArgs e)
@@ -130,16 +79,10 @@ namespace PilotClient
             displayText("Disconnected from simulator");
         }
 
-        static Aircraft Player = new Aircraft()
-        {
-            Callsign = "TSZ213"
-        };
-
         private async void btnGetPositionAsync_Click(object sender, EventArgs e)
         {
-            Player.State = await SimObjectType<AircraftState>.
-                RequestDataOnSimObjectType();
-            displayText(JsonConvert.SerializeObject(Player));
+            FSX.Aircraft player = await FSX.Player.Get();
+            displayText(JsonConvert.SerializeObject(player));
         }
 
         private async void btnGeXpndrAsync_Click(object sender, EventArgs e)

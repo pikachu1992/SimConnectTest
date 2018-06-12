@@ -29,6 +29,9 @@ namespace SimLib
         private static Dictionary<int, TaskCompletionSource<int>> objectIdTasks =
             new Dictionary<int, TaskCompletionSource<int>>();
 
+        private static Dictionary<int, TaskCompletionSource<bool>> resultTasks =
+            new Dictionary<int, TaskCompletionSource<bool>>();
+
         public static async Task<T> RequestDataOnSimObjectType(
             uint radius = 0,
             SIMCONNECT_SIMOBJECT_TYPE type = SIMCONNECT_SIMOBJECT_TYPE.USER)
@@ -75,6 +78,22 @@ namespace SimLib
             int result = await task.Task;
 
             objectIdTasks.Remove(task.Task.Id);
+            return result;
+        }
+
+        public static async Task<bool> SetDataOnSimObject(uint objectId, T data)
+        {
+            TaskCompletionSource<bool> task = new TaskCompletionSource<bool>();
+
+            resultTasks.Add(task.Task.Id, task);
+            FSX.Sim.SetDataOnSimObject((DEFINITIONS)FSX.typeMap[typeof(T)],
+                                       objectId,
+                                       SIMCONNECT_DATA_SET_FLAG.DEFAULT,
+                                       data);
+
+            bool result = await task.Task;
+
+            resultTasks.Remove(task.Task.Id);
             return result;
         }
 

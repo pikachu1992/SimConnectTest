@@ -93,7 +93,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aircraft.cs" />
     <Compile Include="connectedExampleFrm.cs">
       <SubType>Form</SubType>
     </Compile>
