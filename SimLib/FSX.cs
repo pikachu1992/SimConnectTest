@@ -21,7 +21,7 @@ namespace SimLib
                 set { obj.Callsign = value; }
             }
 
-            private static Aircraft obj;
+            private static Aircraft obj = new Aircraft();
 
             public static async Task<Aircraft> Get()
             {

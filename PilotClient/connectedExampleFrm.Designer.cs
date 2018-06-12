@@ -88,7 +88,6 @@
             this.Controls.Add(this.txtLog);
             this.Name = "connectedExampleFrm";
             this.Text = "Form1";
-            this.SimConnectOpen += new System.EventHandler(this.connectedExampleFrm_SimConnectOpen);
             this.SimConnectClosed += new System.EventHandler(this.connectedExampleFrm_SimConnectClosed);
             this.ResumeLayout(false);
 

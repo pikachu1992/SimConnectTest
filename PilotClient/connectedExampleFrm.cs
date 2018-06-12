@@ -29,7 +29,7 @@ namespace PilotClient
         {
             InitializeComponent();
 
-            OAuthToken = null;
+            FSX.Player.Callsign = "TSZ213";
         }
 
         void displayText(string s)
@@ -42,11 +42,6 @@ namespace PilotClient
 
             // display it 
             txtLog.Text = output;
-        }
-
-        private async void connectedExampleFrm_SimConnectOpen(object sender, EventArgs e)
-        {
-            FSX.Player.Callsign = "TSZ213";
         }
 
         private async Task Send()
