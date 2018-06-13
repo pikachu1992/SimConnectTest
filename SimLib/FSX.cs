@@ -78,6 +78,8 @@ namespace SimLib
 
             public async void Update(Aircraft newTraffic)
             {
+                State = newTraffic.State;
+
                 await SimObjectType<AircraftState>.
                     SetDataOnSimObject((uint)ObjectId, State);
             }
