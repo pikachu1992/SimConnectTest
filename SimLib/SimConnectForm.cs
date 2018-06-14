@@ -87,6 +87,42 @@ namespace SimLib
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "FLAPS HANDLE INDEX", UnitsName = "Number",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "IS GEAR RETRACTABLE", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "ELEVATOR POSITION", UnitsName = "Position",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "AILERON POSITION", UnitsName = "Position",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "RUDDER POSITION", UnitsName = "Position",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG COMBUSTION:1", UnitsName = "Bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG COMBUSTION:2", UnitsName = "Bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG COMBUSTION:3", UnitsName = "Bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG COMBUSTION:4", UnitsName = "Bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG THROTTLE LEVER POSITION:1", UnitsName = "Percent",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG THROTTLE LEVER POSITION:2", UnitsName = "Percent",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG THROTTLE LEVER POSITION:3", UnitsName = "Percent",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "GENERAL ENG THROTTLE LEVER POSITION:4", UnitsName = "Percent",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
                     });
 
                     SimObjectType<Radios>.Register(new SimObjectType<Radios>.Field[]

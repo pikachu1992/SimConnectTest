@@ -21,5 +21,17 @@ namespace SimLib
         public uint gearPosition;
         public uint landingLight;
         public double flapsPosition;
+        public uint isGearRetractable;
+        public double elevatorPosition;
+        public double aileronPosition;
+        public double rudderPosition;
+        public uint engineRunning1;
+        public uint engineRunning2;
+        public uint engineRunning3;
+        public uint engineRunning4;
+        public uint throttlePositionEngine1;
+        public uint throttlePositionEngine2;
+        public uint throttlePositionEngine3;
+        public uint throttlePositionEngine4;
     }
 }
