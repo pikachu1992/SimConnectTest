@@ -15,7 +15,7 @@ namespace SimLib
         public double altitude;
         public double pitch;
         public double bank;
-        public double heading;
+        public uint heading;
         public uint airspeed;
         public uint onGround;
         public uint gearPosition;

@@ -71,7 +71,7 @@ namespace SimLib
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "PLANE HEADING DEGREES MAGNETIC", UnitsName = "degrees",
-                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "AIRSPEED TRUE", UnitsName = "knots",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
