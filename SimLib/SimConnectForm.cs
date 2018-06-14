@@ -70,7 +70,7 @@ namespace SimLib
                         { DatumName = "PLANE BANK DEGREES", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                         new SimObjectType<AircraftState>.Field()
-                        { DatumName = "PLANE HEADING DEGREES TRUE", UnitsName = "degrees",
+                        { DatumName = "PLANE HEADING DEGREES MAGNETIC", UnitsName = "degrees",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "AIRSPEED TRUE", UnitsName = "knots",
