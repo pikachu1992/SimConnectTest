@@ -33,5 +33,6 @@ namespace SimLib
         public uint throttlePositionEngine2;
         public uint throttlePositionEngine3;
         public uint throttlePositionEngine4;
+        public int lights;
     }
 }
