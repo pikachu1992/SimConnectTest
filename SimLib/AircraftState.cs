@@ -7,7 +7,6 @@ namespace SimLib
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public class AircraftState
     {
-        // this is how you declare a fixed size string 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public String title;
         public double latitude;
@@ -15,7 +14,8 @@ namespace SimLib
         public double altitude;
         public double pitch;
         public double bank;
-        public uint heading;
+        public uint magHeading;
+        public double heading;
         public uint airspeed;
         public uint onGround;
         public uint gearPosition;
