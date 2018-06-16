@@ -65,7 +65,7 @@ namespace SimLib
             public async void Create()
             {
                 ObjectId = await SimObjectType<AircraftState>.
-                    AICreateNonATCAircraft(ModelName, Callsign, State);
+                    AICreateNonATCAircraft(State.title, Callsign, State);
             }
 
             internal async Task<AircraftState> Read()
