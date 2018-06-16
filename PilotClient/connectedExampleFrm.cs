@@ -24,7 +24,7 @@ namespace PilotClient
         {
             InitializeComponent();
 
-            FSX.Player.Callsign = "TSZ213";
+            FSX.Player.Callsign = "TSZ212";
 
             if(Properties.Settings.Default.SimulatorPath == "")
                 btnConnect.Enabled = false;

@@ -83,7 +83,7 @@ namespace SimLib
                 ObjectId = await SimObjectType<AircraftState>.
                     AICreateNonATCAircraft(State.title, Callsign, State);
 
-                modelMatchingOnServer.Add(new ModelMatchingOnServer { ModelCallsign = "TSZ213", ModelTitle = State.title });
+                modelMatchingOnServer.Add(new ModelMatchingOnServer { ModelCallsign = Callsign, ModelTitle = State.title });
 
                 await VerifyModelMatching();
             }
@@ -118,6 +118,8 @@ namespace SimLib
                             ///compare all models on server and devolve true when installed
                             if (File.ReadLines(String.Format("{0}\\SimObjects\\Airplanes\\{1}\\aircraft.cfg", SimulatorPath, simModels.ModelTitle)).Any(line => line.Contains(modelOnServer.ModelTitle)))
                             {
+                                Console.WriteLine(String.Format("{0} are installed with callsign {1}", modelOnServer.ModelTitle, modelOnServer.ModelCallsign));
+
                                 trues = trues + 1;
                             }
                         }
