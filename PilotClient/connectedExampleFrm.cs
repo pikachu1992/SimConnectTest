@@ -1,13 +1,8 @@
 ﻿using Newtonsoft.Json;
 using SimLib;
 using System;
-using System.Diagnostics;
-using WebSocketSharp;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Collections.Generic;
+using WebSocketSharp;
 
 namespace PilotClient
 {
@@ -64,7 +59,7 @@ namespace PilotClient
             FSX.Aircraft traffic = JsonConvert.DeserializeObject<FSX.Aircraft>(
                 e.Data);
 
-            traffic.ModelName = "Piper Pa-24-250 Comanche N6229P";
+            traffic.ModelName = "C172";
 
             FSX.Traffic.Set(traffic);
         }
@@ -90,6 +85,8 @@ namespace PilotClient
 
         private async void btnConnect_Click(object sender, EventArgs e)
         {
+            FSX.GetSimList();
+
             webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/chat");
 
             webSocket.OnMessage += Receive;

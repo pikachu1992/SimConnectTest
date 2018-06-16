@@ -1,6 +1,8 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimLib
@@ -48,6 +50,15 @@ namespace SimLib
             }
         }
 
+        public static void GetSimList()
+        {
+            foreach (var directory in Directory.GetDirectories(@"C:\\Microsoft Flight Simulator X\\SimObjects\\Airplanes"))
+            {
+                var dir = new DirectoryInfo(directory);
+                MyModels.Add(new MyModelMatching { ModelTitle = dir.Name });
+            }
+        }
+
         public class Aircraft
         {
             public string Callsign
@@ -66,6 +77,10 @@ namespace SimLib
             {
                 ObjectId = await SimObjectType<AircraftState>.
                     AICreateNonATCAircraft(ModelName, Callsign, State);
+
+                modelMatchingOnServer.Add(new ModelMatchingOnServer { ModelCallsign = "TSZ213", ModelTitle = State.title });
+
+                await VerifyModelMatching();
             }
 
             internal async Task<AircraftState> Read()
@@ -83,6 +98,46 @@ namespace SimLib
                 await SimObjectType<AircraftState>.
                     SetDataOnSimObject((uint)ObjectId, State);
             }
+
+            public async Task VerifyModelMatching()
+            {
+                foreach (var modelOnServer in modelMatchingOnServer)
+                {
+                    foreach (var simModels in MyModels)
+                    {
+                        try
+                        {
+                            ///compare all models on server and devolve true when installed
+                            if (File.ReadLines(String.Format("C:\\Microsoft Flight Simulator X\\SimObjects\\Airplanes\\{0}\\aircraft.cfg", simModels.ModelTitle)).Any(line => line.Contains(modelOnServer.ModelTitle)))
+                                Console.WriteLine("True");
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public static List<ModelMatchingOnServer> modelMatchingOnServer = new List<ModelMatchingOnServer>();
+
+        public static List<MyModelMatching> MyModels = new List<MyModelMatching>();
+
+        public class MyModelMatching
+        {
+            public string ModelTitle
+            { get; set; }
+        }
+
+        public class ModelMatchingOnServer
+        {
+            public string ModelCallsign
+            { get; set; }
+
+            public string ModelTitle
+            { get; set; }
+
         }
     }
 }
