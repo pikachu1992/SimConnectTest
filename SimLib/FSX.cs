@@ -130,6 +130,13 @@ namespace SimLib
                         }
                     }
                 }
+
+                if(trues == 0)
+                {
+                    //Get Sim Model
+                    Console.WriteLine(String.Format("Need Get Model {0}", State.title));
+                }
+             
             }
         }
     }

@@ -29,7 +29,7 @@ namespace PilotClient
         {
             InitializeComponent();
 
-            FSX.Player.Callsign = "TSZ212";
+            FSX.Player.Callsign = "TSZ213";
 
             if (Properties.Settings.Default.SimulatorPath == "")
                 btnConnect.Enabled = false;
@@ -66,8 +66,6 @@ namespace PilotClient
         {
             FSX.Aircraft traffic = JsonConvert.DeserializeObject<FSX.Aircraft>(
                 e.Data);
-
-            traffic.ModelName = "C172";
 
             FSX.Traffic.Set(traffic);
         }
