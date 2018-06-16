@@ -50,9 +50,14 @@ namespace SimLib
             }
         }
 
-        public static void GetSimList()
+        public static string SimulatorPath
+        { get; set; }
+
+        public static void GetSimList(string simPath)
         {
-            foreach (var directory in Directory.GetDirectories(@"C:\\Microsoft Flight Simulator X\\SimObjects\\Airplanes"))
+            SimulatorPath = simPath;
+
+            foreach (var directory in Directory.GetDirectories(simPath + "\\SimObjects\\Airplanes"))
             {
                 var dir = new DirectoryInfo(directory);
                 MyModels.Add(new MyModelMatching { ModelTitle = dir.Name });
@@ -108,7 +113,7 @@ namespace SimLib
                         try
                         {
                             ///compare all models on server and devolve true when installed
-                            if (File.ReadLines(String.Format("C:\\Microsoft Flight Simulator X\\SimObjects\\Airplanes\\{0}\\aircraft.cfg", simModels.ModelTitle)).Any(line => line.Contains(modelOnServer.ModelTitle)))
+                            if (File.ReadLines(String.Format("{0}\\SimObjects\\Airplanes\\{1}\\aircraft.cfg", SimulatorPath, simModels.ModelTitle)).Any(line => line.Contains(modelOnServer.ModelTitle)))
                                 Console.WriteLine("True");
                         }
                         catch (Exception ex)
