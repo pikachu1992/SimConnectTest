@@ -59,8 +59,6 @@ namespace PilotClient
             FSX.Aircraft traffic = JsonConvert.DeserializeObject<FSX.Aircraft>(
                 e.Data);
 
-            traffic.ModelName = "C172";
-
             FSX.Traffic.Set(traffic);
         }
 

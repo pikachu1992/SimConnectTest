@@ -76,7 +76,7 @@ namespace SimLib
             public async void Create()
             {
                 ObjectId = await SimObjectType<AircraftState>.
-                    AICreateNonATCAircraft(ModelName, Callsign, State);
+                    AICreateNonATCAircraft(State.title, Callsign, State);
 
                 modelMatchingOnServer.Add(new ModelMatchingOnServer { ModelCallsign = "TSZ213", ModelTitle = State.title });
 
