@@ -90,6 +90,8 @@ namespace PilotClient
 
         private async void btnConnect_Click(object sender, EventArgs e)
         {
+            FSX.GetSimList(@"C:\Microsoft Flight Simulator X");
+
             webSocket = new WebSocket(@"wss://fa-live.herokuapp.com/chat");
 
             webSocket.OnMessage += Receive;

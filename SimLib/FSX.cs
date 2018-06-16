@@ -1,6 +1,8 @@
 ﻿using Microsoft.FlightSimulator.SimConnect;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SimLib
@@ -48,6 +50,28 @@ namespace SimLib
             }
         }
 
+        public static string SimulatorPath
+        { get; set; }
+
+        public static void GetSimList(string simPath)
+        {
+            SimulatorPath = simPath;
+
+            foreach (var directory in Directory.GetDirectories(simPath + "\\SimObjects\\Airplanes"))
+            {
+                var dir = new DirectoryInfo(directory);
+                MyModels.Add(new MyModelMatching { ModelTitle = dir.Name });
+            }
+        }
+
+        public static List<MyModelMatching> MyModels = new List<MyModelMatching>();
+
+        public class MyModelMatching
+        {
+            public string ModelTitle
+            { get; set; }
+        }
+
         public class Aircraft
         {
             public string Callsign
@@ -66,6 +90,23 @@ namespace SimLib
             {
                 ObjectId = await SimObjectType<AircraftState>.
                     AICreateNonATCAircraft(State.title, Callsign, State);
+
+                foreach (var simModels in MyModels)
+                {
+                    try
+                    {
+                        ///compare all models on server and devolve true when installed
+                        if (File.ReadLines(String.Format("{0}\\SimObjects\\Airplanes\\{1}\\aircraft.cfg", SimulatorPath, simModels.ModelTitle)).Any(line => line.Contains(State.title)))
+                        {
+                            Console.WriteLine(String.Format("{0} are installed with callsign {1}.", State.title, Callsign));
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
             }
 
             internal async Task<AircraftState> Read()
