@@ -106,6 +106,9 @@ namespace SimLib
 
             public async Task VerifyModelMatching()
             {
+
+                int trues = 0;
+
                 foreach (var modelOnServer in modelMatchingOnServer)
                 {
                     foreach (var simModels in MyModels)
@@ -114,13 +117,20 @@ namespace SimLib
                         {
                             ///compare all models on server and devolve true when installed
                             if (File.ReadLines(String.Format("{0}\\SimObjects\\Airplanes\\{1}\\aircraft.cfg", SimulatorPath, simModels.ModelTitle)).Any(line => line.Contains(modelOnServer.ModelTitle)))
-                                Console.WriteLine("True");
+                            {
+                                trues = trues + 1;
+                            }
                         }
                         catch (Exception ex)
                         {
 
                         }
                     }
+                }
+
+                if (trues == 0)
+                {
+                    //Get Model From Other User
                 }
             }
         }
