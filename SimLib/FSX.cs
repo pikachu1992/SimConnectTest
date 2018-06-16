@@ -91,22 +91,7 @@ namespace SimLib
                 ObjectId = await SimObjectType<AircraftState>.
                     AICreateNonATCAircraft(State.title, Callsign, State);
 
-                foreach (var simModels in MyModels)
-                {
-                    try
-                    {
-                        ///compare all models on server and devolve true when installed
-                        if (File.ReadLines(String.Format("{0}\\SimObjects\\Airplanes\\{1}\\aircraft.cfg", SimulatorPath, simModels.ModelTitle)).Any(line => line.Contains(State.title)))
-                        {
-                            Console.WriteLine(String.Format("{0} are installed with callsign {1}.", State.title, Callsign));
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
+                await VerifyInstalledModel();
             }
 
             internal async Task<AircraftState> Read()
@@ -123,6 +108,28 @@ namespace SimLib
 
                 await SimObjectType<AircraftState>.
                     SetDataOnSimObject((uint)ObjectId, State);
+            }
+
+            public async Task VerifyInstalledModel()
+            {
+                int trues = 0;
+
+                foreach (var simModels in MyModels)
+                {
+                    string[] allFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\Airplanes\\{1}", SimulatorPath, simModels.ModelTitle), "*.cfg");
+
+                    foreach (string file in allFiles)
+                    {
+                        string[] lines = File.ReadAllLines(file);
+                        string firstOccurrence = lines.FirstOrDefault(l => l.Contains(State.title));
+                        if (firstOccurrence != null)
+                        {
+                            Console.WriteLine(String.Format("{0} with callsign {1}", firstOccurrence, Callsign));
+
+                            trues = trues + 1;
+                        }
+                    }
+                }
             }
         }
     }
