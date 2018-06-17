@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SimLib
 {
@@ -60,11 +63,19 @@ namespace SimLib
             foreach (var directory in Directory.GetDirectories(simPath + "\\SimObjects\\Airplanes"))
             {
                 var dir = new DirectoryInfo(directory);
-                MyModels.Add(new MyModelMatching { ModelTitle = dir.Name });
+                MySimModels.Add(new MyModelMatching { ModelTitle = dir.Name });
+            }
+
+            foreach (var directory in Directory.GetDirectories(simPath + "\\SimObjects\\NETWORK"))
+            {
+                var dir = new DirectoryInfo(directory);
+                MyNetModels.Add(new MyModelMatching { ModelTitle = dir.Name });
             }
         }
 
-        public static List<MyModelMatching> MyModels = new List<MyModelMatching>();
+        public static List<MyModelMatching> MySimModels = new List<MyModelMatching>();
+
+        public static List<MyModelMatching> MyNetModels = new List<MyModelMatching>();
 
         public class MyModelMatching
         {
@@ -114,7 +125,7 @@ namespace SimLib
             {
                 int trues = 0;
 
-                foreach (var simModels in MyModels)
+                foreach (var simModels in MySimModels)
                 {
                     string[] allFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\Airplanes\\{1}", SimulatorPath, simModels.ModelTitle), "*.cfg");
 
@@ -124,19 +135,63 @@ namespace SimLib
                         string firstOccurrence = lines.FirstOrDefault(l => l.Contains(State.title));
                         if (firstOccurrence != null)
                         {
-                            Console.WriteLine(String.Format("{0} with callsign {1}", firstOccurrence, Callsign));
-
                             trues = trues + 1;
                         }
                     }
                 }
 
-                if(trues == 0)
+                foreach (var netModels in MyNetModels)
                 {
-                    //Get Sim Model
-                    Console.WriteLine(String.Format("Need Get Model {0}", State.title));
+                    string[] allModelFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\NETWORK\\{1}", SimulatorPath, netModels.ModelTitle), "*.cfg");
+
+                    foreach (string file in allModelFiles)
+                    {
+                        string[] lines = File.ReadAllLines(file);
+                        string firstOccurrence = lines.FirstOrDefault(l => l.Contains(netModels.ModelTitle));
+                        if (firstOccurrence != null)
+                        {
+                            trues = trues + 1;
+                        }
+                    }
                 }
+
+                if (trues == 1)
+                    await GetModelMatch(State.title);
              
+            }
+        }  
+        
+        public async static Task GetModelMatch(string model)
+        { 
+
+            string extractPath = String.Format("{0}\\SimObjects\\NETWORK\\{1}", SimulatorPath, model);
+
+            string zipPath = String.Format("{0}.zip", extractPath);
+
+            using (WebClient Client = new WebClient())
+            {
+
+                Uri uri = new Uri(String.Format("https://flyatlantic-va.com/simModels/{0}.zip", model));
+
+                Client.DownloadFileCompleted += Client_DownloadFileCompleted;
+
+                Client.DownloadFileAsync(uri, String.Format("{0}\\SimObjects\\NETWORK\\{1}.zip", SimulatorPath, model));
+
+                void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+                {
+                    if (e.Error == null) {
+                        
+                        ZipFile.ExtractToDirectory(zipPath, extractPath);
+
+                        File.Delete(zipPath);
+
+                        MessageBox.Show(String.Format("{0} is now installed restart your simulator for view new MTL.", model));
+                    }
+                    else
+                    {
+                        MessageBox.Show(String.Format("{0} not exists on server and not appears on simulator", model));
+                    }
+                }              
             }
         }
     }
