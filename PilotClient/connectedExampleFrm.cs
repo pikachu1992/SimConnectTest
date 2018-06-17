@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using SimLib;
 using System;
-using System.Diagnostics;
-using WebSocketSharp;
-using System.Text;
-using System.Threading;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Collections.Generic;
+using WebSocketSharp;
 
 namespace PilotClient
 {
@@ -111,6 +108,28 @@ namespace PilotClient
             Properties.Settings.Default.Save();
 
             btnConnect.Enabled = true;
+        }
+
+        private void btnGetModelFromServer_Click(object sender, EventArgs e)
+        {
+            Uri myUri = new Uri("ftp://ftp.flyatlantic-va.com/");
+            // Get the object used to communicate with the server.
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(myUri);
+            request.Method = WebRequestMethods.Ftp.ListDirectory;
+
+            // This example assumes the FTP site uses anonymous logon.
+            request.Credentials = new NetworkCredential("u647980497.teste", "123456");
+
+            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+            Stream responseStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(responseStream);
+            Console.WriteLine(reader.ReadToEnd());
+
+            //Console.WriteLine("Directory List Complete, status {0}", response.StatusDescription);
+
+            reader.Close();
+            response.Close();
         }
     }
 }
