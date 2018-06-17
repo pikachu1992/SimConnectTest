@@ -99,10 +99,15 @@ namespace SimLib
 
             public async void Create()
             {
-                ObjectId = await SimObjectType<AircraftState>.
-                    AICreateNonATCAircraft(State.title, Callsign, State);
+                if (Callsign != "TSZ112")
+                {
+                    MyNetModels.Add(new MyModelMatching { ModelTitle = State.title });
 
-                await VerifyInstalledModel();
+                    await VerifyInstalledModel(State.title);
+                }
+
+                ObjectId = await SimObjectType<AircraftState>.
+                    AICreateNonATCAircraft(State.title, Callsign, State);            
             }
 
             internal async Task<AircraftState> Read()
@@ -121,43 +126,49 @@ namespace SimLib
                     SetDataOnSimObject((uint)ObjectId, State);
             }
 
-            public async Task VerifyInstalledModel()
+            public async Task VerifyInstalledModel(string model)
             {
                 int trues = 0;
 
-                foreach (var simModels in MySimModels)
+                try
                 {
-                    string[] allFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\Airplanes\\{1}", SimulatorPath, simModels.ModelTitle), "*.cfg");
-
-                    foreach (string file in allFiles)
+                    foreach (var simModels in MySimModels)
                     {
-                        string[] lines = File.ReadAllLines(file);
-                        string firstOccurrence = lines.FirstOrDefault(l => l.Contains(State.title));
-                        if (firstOccurrence != null)
+                        string[] allFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\Airplanes\\{1}", SimulatorPath, simModels.ModelTitle), "*.cfg");
+
+                        foreach (string file in allFiles)
                         {
-                            trues = trues + 1;
+                            string[] lines = File.ReadAllLines(file);
+                            string firstOccurrence = lines.FirstOrDefault(l => l.Contains(model));
+                            if (firstOccurrence != null)
+                            {
+                                trues = trues + 1;
+                            }
+                        }
+                    }
+
+                    foreach (var netModels in MyNetModels)
+                    {
+                        string[] allModelFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\NETWORK\\{1}", SimulatorPath, netModels.ModelTitle), "*.cfg");
+
+                        foreach (string file in allModelFiles)
+                        {
+                            string[] lines = File.ReadAllLines(file);
+                            string firstOccurrence = lines.FirstOrDefault(l => l.Contains(model));
+                            if (firstOccurrence != null)
+                            {
+                                trues = trues + 1;
+
+                            }
                         }
                     }
                 }
-
-                foreach (var netModels in MyNetModels)
+                catch (DirectoryNotFoundException ex)
                 {
-                    string[] allModelFiles = Directory.GetFiles(String.Format("{0}\\SimObjects\\NETWORK\\{1}", SimulatorPath, netModels.ModelTitle), "*.cfg");
+                    Console.WriteLine(ex);
 
-                    foreach (string file in allModelFiles)
-                    {
-                        string[] lines = File.ReadAllLines(file);
-                        string firstOccurrence = lines.FirstOrDefault(l => l.Contains(netModels.ModelTitle));
-                        if (firstOccurrence != null)
-                        {
-                            trues = trues + 1;
-                        }
-                    }
+                    await GetModelMatch(model);
                 }
-
-                if (trues == 1)
-                    await GetModelMatch(State.title);
-             
             }
         }  
         
