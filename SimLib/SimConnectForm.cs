@@ -88,6 +88,21 @@ namespace SimLib
                         { DatumName = "LIGHT LANDING", UnitsName = "bool",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT STROBE", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT BEACON", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT NAV", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT TAXI", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT RECOGNITION", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "FLAPS HANDLE INDEX", UnitsName = "Number",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                         new SimObjectType<AircraftState>.Field()
