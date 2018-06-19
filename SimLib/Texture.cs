@@ -1,0 +1,212 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using IniParser;
+using IniParser.Model;
+
+namespace SimLib
+{
+    public class Model
+    {
+        /// <summary>
+        /// TODO: look this up, somehow
+        /// </summary>
+        private const string simrootpath =
+            @"C:\Program Files (x86)\Lockheed Martin\Prepar3D v3";
+
+        /// <summary>
+        /// The name of the model folder as installed in
+        /// %simrootpath%/SimObjects/%SimObjectFolder%
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
+        /// ATC aircraft type
+        /// </summary>
+        public string Type { get; private set; }
+
+        /// <summary>
+        /// All required folder names for the current model
+        /// </summary>
+        public string[] Folders { get; private set; }
+
+        /// <summary>
+        /// All the configurations, except texture information, available on the 
+        /// aircraft.cfg file for this model.
+        /// </summary>
+        public SectionData[] ConfigSections { get; private set; }
+
+        /// <summary>
+        /// List of available model textures
+        /// </summary>
+        public Texture[] Textures { get; private set; }
+
+        public class Texture
+        {
+            /// <summary>
+            /// The texture name, as its used in SimConnect
+            /// </summary>
+            public string Name { get; private set; }
+
+            /// <summary>
+            /// All model required folders, as specified in the ConfigSection keys
+            /// </summary>
+            public string[] Folders { get; private set; }
+
+            /// <summary>
+            /// The aircraft.cfg section
+            /// </summary>
+            public SectionData ConfigSection { get; internal set; }
+
+            /// <summary>
+            /// Reads a given Texture entry from aircraft.cfg
+            /// </summary>
+            /// <param name="section">INI file section containing the texture
+            /// information</param>
+            /// <returns></returns>
+            internal static Texture GetTexture(SectionData section)
+            {
+                List<string> folders = new List<string>();
+
+                // get the texture entry name
+                string name = section.Keys["title"];
+                folders.Add("texture." + name);
+
+                // get any specific model folders
+                if (section.Keys["model"] != "")
+                    folders.Add(section.Keys["model"]);
+
+                return new Texture()
+                {
+                    Name = name,
+                    Folders = folders.ToArray(),
+                    ConfigSection = section
+                };
+            }
+        }
+
+        /// <summary>
+        /// Gets a given model from a given SimObjects entry
+        /// </summary>
+        /// <param name="objects">the folder name in %simrootpath%/SimObjects/</param>
+        /// <param name="model">the folder name of the model</param>
+        /// <returns></returns>
+        public static Model GetModel(string model)
+        {
+            // generate model absolute path
+            string path = Path.Combine(
+                simrootpath,
+                "SimObjects",
+                "Airplanes",
+                model);
+
+            // load aircraft.cfg
+            IniData config = GetConfigData(path);
+
+            // lift all needed info from cfg file
+            List<string> folders = new List<string>() { "model", "texture" };
+            List<SectionData> configSections = new List<SectionData>();
+            List<Texture> textures = new List<Texture>();
+            string type = null;
+            foreach (SectionData section in config.Sections)
+            {
+                // isolate texture section into Texture class
+                if (section.SectionName.StartsWith("fltsim."))
+                    textures.Add(Texture.GetTexture(section));
+
+                if (section.SectionName == "General")
+                    type = section.Keys["atc_model"];
+
+                // all other sections are added on the texture level
+                configSections.Add(section);
+            }
+
+            return new Model()
+            {
+                Name = model,
+                Type = type,
+                Folders = folders.ToArray(),
+                ConfigSections = configSections.ToArray(),
+                Textures = textures.ToArray()
+            };
+        }
+
+        /// <summary>
+        /// Loads a given cfg file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private static IniData GetConfigData(string path)
+        {
+            // configure INI file parser
+            FileIniDataParser cfgFile = new FileIniDataParser();
+            cfgFile.Parser.Configuration.CommentRegex =
+                new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
+            cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
+            cfgFile.Parser.Configuration.SkipInvalidLines = true;
+
+            // read CFG file, it's just an INI file format
+            return cfgFile.ReadFile(
+                Path.Combine(path, "aircraft.cfg"));
+        }
+
+        /// <summary>
+        /// Returns a map of available textures and their corresponding model name
+        /// </summary>
+        /// <param name="simObjectsFolder">relative path to
+        /// %simrootpath%/SimObjects/</param>
+        /// <returns></returns>
+        public static Dictionary<string, string> MapModels(string simObjectsFolder)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            // list all model folders in %simrootpath%/SimObjects/simObjectsFolder
+            string[] modelFolders =
+                Directory.GetDirectories(
+                    Path.Combine(simrootpath, "SimObjects", simObjectsFolder));
+
+            // traverse all models looking for their textures
+            foreach (string model in modelFolders)
+                foreach (string texture in ListModelTextures(model))
+                    // Path.GetFileName also returns the last directory name
+                    result.Add(texture, Path.GetFileName(model));
+
+            return result;
+        }
+        /// <summary>
+        /// Lists all available models listed on the aircraft CFG file for a given
+        /// model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private static string[] ListModelTextures(string model)
+        {
+            List<string> result = new List<string>();
+            DirectoryInfo modelDirectory = new DirectoryInfo(model);
+            string modelPath = Path.Combine(
+                modelDirectory.FullName,
+                "aircraft.cfg");
+
+            // no INI file, no textures, no model, no funny
+            if (!File.Exists(modelPath))
+                return new string[0];
+
+            // Configure INI file parser
+            FileIniDataParser cfgFile = new FileIniDataParser();
+            cfgFile.Parser.Configuration.CommentRegex =
+                new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
+            cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
+            cfgFile.Parser.Configuration.SkipInvalidLines = true;
+
+            // read CFG file, it's just an INI file format
+            IniData data = cfgFile.ReadFile(
+                Path.Combine(modelDirectory.FullName, "aircraft.cfg"));
+
+            foreach (SectionData section in data.Sections)
+                if (section.SectionName.StartsWith("fltsim."))
+                    result.Add(section.Keys["title"]);
+
+            return result.ToArray();
+        }
+    }
+}
