@@ -127,7 +127,19 @@ namespace SimLib
                         { DatumName = "GENERAL ENG THROTTLE LEVER POSITION:4", UnitsName = "Percent",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
-                        { DatumName = "LIGHT ON STATES", UnitsName = "Mask",
+                        { DatumName = "LIGHT STROBE", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT BEACON", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT NAV", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT TAXI", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT RECOGNITION", UnitsName = "bool",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                     });
 
