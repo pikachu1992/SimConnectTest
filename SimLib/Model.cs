@@ -149,9 +149,9 @@ namespace SimLib
         /// <param name="simObjectsFolder">relative path to
         /// %simrootpath%/SimObjects/</param>
         /// <returns></returns>
-        public static Dictionary<string, string> MapModels(string simObjectsFolder)
+        public static Dictionary<string, Model> MapModels(string simObjectsFolder)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            Dictionary<string, Model> result = new Dictionary<string, Model>();
 
             // list all model folders in %simrootpath%/SimObjects/simObjectsFolder
             string[] modelFolders =
@@ -164,10 +164,10 @@ namespace SimLib
                 if (!File.Exists(Path.Combine(modelPath, "aircraft.cfg")))
                     continue;
 
-                string model = Path.GetFileName(modelPath);
-                foreach (Texture texture in new Model(model).Textures)
+                Model model = new Model(Path.GetFileName(modelPath));
+                foreach (Texture texture in model.Textures)
                     // Path.GetFileName also returns the last directory name
-                    result.Add(texture.Name, Path.GetFileName(model));
+                    result.Add(texture.Name, model);
             }
 
             return result;
