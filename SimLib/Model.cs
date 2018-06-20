@@ -8,6 +8,46 @@ namespace SimLib
 {
     public class Model
     {
+        public Model(string model)
+        {
+            // generate model absolute path
+            string path = Path.Combine(
+                simrootpath,
+                "SimObjects",
+                "Airplanes",
+                model);
+
+            // load aircraft.cfg
+            IniData config = GetConfigData(path);
+
+            // lift all needed info from cfg file
+            List<string> folders = new List<string>() { "model", "texture" };
+            List<SectionData> configSections = new List<SectionData>();
+            List<Texture> textures = new List<Texture>();
+            foreach (SectionData section in config.Sections)
+            {
+                // isolate texture section into Texture class
+                if (section.SectionName.StartsWith("fltsim."))
+                    textures.Add(new Texture(section));
+
+                if (section.SectionName == "General")
+                    Type = section.Keys["atc_model"];
+
+                // all other sections are added on the texture level
+                configSections.Add(section);
+            }
+
+            Name = model;
+            Folders = folders.ToArray();
+            ConfigSections = configSections.ToArray();
+            Textures = textures.ToArray();
+        }
+
+        /// <summary>
+        /// Hide constructor
+        /// </summary>
+        private Model() { }
+
         /// <summary>
         /// TODO: look this up, somehow
         /// </summary>
@@ -44,6 +84,31 @@ namespace SimLib
         public class Texture
         {
             /// <summary>
+            /// Reads a given Texture entry from aircraft.cfg
+            /// </summary>
+            /// <param name="section"></param>
+            public Texture(SectionData section)
+            {
+                List<string> folders = new List<string>();
+
+                // get the texture entry name
+                Name = section.Keys["title"];
+                folders.Add("texture." + Name);
+
+                // get any specific model folders
+                if (section.Keys["model"] != "")
+                    folders.Add(section.Keys["model"]);
+
+                Folders = folders.ToArray();
+                ConfigSection = section;
+            }
+
+            /// <summary>
+            /// Hide constructor
+            /// </summary>
+            private Texture() { }
+
+            /// <summary>
             /// The texture name, as its used in SimConnect
             /// </summary>
             public string Name { get; private set; }
@@ -57,80 +122,8 @@ namespace SimLib
             /// The aircraft.cfg section
             /// </summary>
             public SectionData ConfigSection { get; internal set; }
-
-            /// <summary>
-            /// Reads a given Texture entry from aircraft.cfg
-            /// </summary>
-            /// <param name="section">INI file section containing the texture
-            /// information</param>
-            /// <returns></returns>
-            internal static Texture GetTexture(SectionData section)
-            {
-                List<string> folders = new List<string>();
-
-                // get the texture entry name
-                string name = section.Keys["title"];
-                folders.Add("texture." + name);
-
-                // get any specific model folders
-                if (section.Keys["model"] != "")
-                    folders.Add(section.Keys["model"]);
-
-                return new Texture()
-                {
-                    Name = name,
-                    Folders = folders.ToArray(),
-                    ConfigSection = section
-                };
-            }
         }
-
-        /// <summary>
-        /// Gets a given model from a given SimObjects entry
-        /// </summary>
-        /// <param name="objects">the folder name in %simrootpath%/SimObjects/</param>
-        /// <param name="model">the folder name of the model</param>
-        /// <returns></returns>
-        public static Model GetModel(string model)
-        {
-            // generate model absolute path
-            string path = Path.Combine(
-                simrootpath,
-                "SimObjects",
-                "Airplanes",
-                model);
-
-            // load aircraft.cfg
-            IniData config = GetConfigData(path);
-
-            // lift all needed info from cfg file
-            List<string> folders = new List<string>() { "model", "texture" };
-            List<SectionData> configSections = new List<SectionData>();
-            List<Texture> textures = new List<Texture>();
-            string type = null;
-            foreach (SectionData section in config.Sections)
-            {
-                // isolate texture section into Texture class
-                if (section.SectionName.StartsWith("fltsim."))
-                    textures.Add(Texture.GetTexture(section));
-
-                if (section.SectionName == "General")
-                    type = section.Keys["atc_model"];
-
-                // all other sections are added on the texture level
-                configSections.Add(section);
-            }
-
-            return new Model()
-            {
-                Name = model,
-                Type = type,
-                Folders = folders.ToArray(),
-                ConfigSections = configSections.ToArray(),
-                Textures = textures.ToArray()
-            };
-        }
-
+        
         /// <summary>
         /// Loads a given cfg file
         /// </summary>
@@ -172,7 +165,7 @@ namespace SimLib
                     continue;
 
                 string model = Path.GetFileName(modelPath);
-                foreach (Texture texture in GetModel(model).Textures)
+                foreach (Texture texture in new Model(model).Textures)
                     // Path.GetFileName also returns the last directory name
                     result.Add(texture.Name, Path.GetFileName(model));
             }
