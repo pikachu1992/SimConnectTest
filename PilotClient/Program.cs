@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace PilotClient
         [STAThread]
         static void Main()
         {
+            Model.MapModels(@"Airplanes");
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             connectedExampleFrm frm = new connectedExampleFrm();

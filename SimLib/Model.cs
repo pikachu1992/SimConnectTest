@@ -52,7 +52,7 @@ namespace SimLib
         /// TODO: look this up, somehow
         /// </summary>
         private const string simrootpath =
-            @"C:\Program Files (x86)\Lockheed Martin\Prepar3D v3";
+            @"C:\Microsoft Flight Simulator X";
 
         /// <summary>
         /// The name of the model folder as installed in
@@ -137,6 +137,7 @@ namespace SimLib
                 new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
             cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
             cfgFile.Parser.Configuration.SkipInvalidLines = true;
+            cfgFile.Parser.Configuration.AllowDuplicateSections = true;
 
             // read CFG file, it's just an INI file format
             return cfgFile.ReadFile(
