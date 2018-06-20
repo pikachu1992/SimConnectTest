@@ -88,6 +88,21 @@ namespace SimLib
                         { DatumName = "LIGHT LANDING", UnitsName = "bool",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT STROBE", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT BEACON", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT NAV", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT TAXI", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT RECOGNITION", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "FLAPS HANDLE INDEX", UnitsName = "Number",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                         new SimObjectType<AircraftState>.Field()
@@ -139,6 +154,18 @@ namespace SimLib
                         new SimObjectType<Radios>.Field()
                         { DatumName = "TRANSPONDER CODE:1", UnitsName = "BCO16",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
+                         new SimObjectType<Radios>.Field()
+                        { DatumName = "COM ACTIVE FREQUENCY:1", UnitsName = "MHz",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<Radios>.Field()
+                        { DatumName = "COM STANDBY FREQUENCY:1", UnitsName = "MHz",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<Radios>.Field()
+                        { DatumName = "COM ACTIVE FREQUENCY:2", UnitsName = "MHz",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
+                        new SimObjectType<Radios>.Field()
+                        { DatumName = "COM STANDBY FREQUENCY:2", UnitsName = "MHz",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                     });
 
                     //RegisterEvents();
