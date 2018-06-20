@@ -137,6 +137,7 @@ namespace SimLib
                 new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
             cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
             cfgFile.Parser.Configuration.SkipInvalidLines = true;
+            cfgFile.Parser.Configuration.AllowDuplicateSections = true;
 
             // read CFG file, it's just an INI file format
             return cfgFile.ReadFile(
