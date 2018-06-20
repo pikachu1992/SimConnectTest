@@ -140,8 +140,7 @@ namespace SimLib
             cfgFile.Parser.Configuration.AllowDuplicateSections = true;
 
             // read CFG file, it's just an INI file format
-            return cfgFile.ReadFile(
-                Path.Combine(path, "aircraft.cfg"));
+            return cfgFile.ReadFile(path);
         }
 
         /// <summary>
@@ -152,6 +151,8 @@ namespace SimLib
         /// <returns></returns>
         public static Dictionary<string, Model> MapModels(string simObjectsFolder)
         {
+            List<string> configFileNames = new List<string>();
+
             Dictionary<string, Model> result = new Dictionary<string, Model>();
 
             // list all model folders in %simrootpath%/SimObjects/simObjectsFolder
@@ -162,11 +163,14 @@ namespace SimLib
             // traverse all models looking for their textures
             foreach (string modelPath in modelFolders)
             {
-                if (!File.Exists(Path.Combine(modelPath, "aircraft.cfg")))
+                string[] allFiles = Directory.GetFiles(modelPath, "*.cfg");
+
+                if (allFiles.Length != 0)
+                    configFileNames.Add(allFiles[0].ToString());
+                else
                     continue;
 
-                Model model = new Model(
-                    Path.GetFileName(modelPath),
+                Model model = new Model(Path.Combine(modelPath, allFiles[0].ToString()),
                     simObjectsFolder);
                 foreach (Texture texture in model.Textures)
                     // Path.GetFileName also returns the last directory name
