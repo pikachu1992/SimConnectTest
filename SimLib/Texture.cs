@@ -166,47 +166,18 @@ namespace SimLib
                     Path.Combine(simrootpath, "SimObjects", simObjectsFolder));
 
             // traverse all models looking for their textures
-            foreach (string model in modelFolders)
-                foreach (string texture in ListModelTextures(model))
+            foreach (string modelPath in modelFolders)
+            {
+                if (!File.Exists(Path.Combine(modelPath, "aircraft.cfg")))
+                    continue;
+
+                string model = Path.GetFileName(modelPath);
+                foreach (Texture texture in GetModel(model).Textures)
                     // Path.GetFileName also returns the last directory name
-                    result.Add(texture, Path.GetFileName(model));
+                    result.Add(texture.Name, Path.GetFileName(model));
+            }
 
             return result;
-        }
-        /// <summary>
-        /// Lists all available models listed on the aircraft CFG file for a given
-        /// model.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private static string[] ListModelTextures(string model)
-        {
-            List<string> result = new List<string>();
-            DirectoryInfo modelDirectory = new DirectoryInfo(model);
-            string modelPath = Path.Combine(
-                modelDirectory.FullName,
-                "aircraft.cfg");
-
-            // no INI file, no textures, no model, no funny
-            if (!File.Exists(modelPath))
-                return new string[0];
-
-            // Configure INI file parser
-            FileIniDataParser cfgFile = new FileIniDataParser();
-            cfgFile.Parser.Configuration.CommentRegex =
-                new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
-            cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
-            cfgFile.Parser.Configuration.SkipInvalidLines = true;
-
-            // read CFG file, it's just an INI file format
-            IniData data = cfgFile.ReadFile(
-                Path.Combine(modelDirectory.FullName, "aircraft.cfg"));
-
-            foreach (SectionData section in data.Sections)
-                if (section.SectionName.StartsWith("fltsim."))
-                    result.Add(section.Keys["title"]);
-
-            return result.ToArray();
         }
     }
 }
