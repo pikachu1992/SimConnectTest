@@ -62,7 +62,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FSX.cs" />
-    <Compile Include="Texture.cs" />
+    <Compile Include="Model.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SimConnectForm.Events.cs">
