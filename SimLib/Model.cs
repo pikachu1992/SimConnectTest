@@ -8,13 +8,13 @@ namespace SimLib
 {
     public class Model
     {
-        public Model(string model)
+        public Model(string model, string simObjectsFolder)
         {
             // generate model absolute path
             string path = Path.Combine(
                 simrootpath,
                 "SimObjects",
-                "Airplanes",
+                simObjectsFolder,
                 model);
 
             // load aircraft.cfg
@@ -164,7 +164,9 @@ namespace SimLib
                 if (!File.Exists(Path.Combine(modelPath, "aircraft.cfg")))
                     continue;
 
-                Model model = new Model(Path.GetFileName(modelPath));
+                Model model = new Model(
+                    Path.GetFileName(modelPath),
+                    simObjectsFolder);
                 foreach (Texture texture in model.Textures)
                     // Path.GetFileName also returns the last directory name
                     result.Add(texture.Name, model);
