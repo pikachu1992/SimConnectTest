@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InstallModel.cs" />
     <Compile Include="Radios.cs" />
     <Compile Include="SimObjectType.cs" />
     <Compile Include="AircraftState.cs" />
