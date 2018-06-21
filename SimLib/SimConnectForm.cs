@@ -87,6 +87,21 @@ namespace SimLib
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "LIGHT LANDING", UnitsName = "bool",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
+                         new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT STROBE", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT BEACON", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT NAV", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT TAXI", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "LIGHT RECOGNITION", UnitsName = "bool",
+                            DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "FLAPS HANDLE INDEX", UnitsName = "Number",
                             DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
@@ -125,9 +140,6 @@ namespace SimLib
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "GENERAL ENG THROTTLE LEVER POSITION:4", UnitsName = "Percent",
-                            DatumType = SIMCONNECT_DATATYPE.INT32 },
-                        new SimObjectType<AircraftState>.Field()
-                        { DatumName = "LIGHT ON STATES", UnitsName = "Mask",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                     });
 

@@ -20,6 +20,11 @@ namespace SimLib
         public uint onGround;
         public uint gearPosition;
         public uint landingLight;
+        public uint strobeLight;
+        public uint beaconLight;
+        public uint navLight;
+        public uint taxiLight;
+        public uint recognitionLight;
         public double flapsPosition;
         public uint isGearRetractable;
         public double elevatorPosition;
@@ -33,6 +38,5 @@ namespace SimLib
         public uint throttlePositionEngine2;
         public uint throttlePositionEngine3;
         public uint throttlePositionEngine4;
-        public int lights;
     }
 }
