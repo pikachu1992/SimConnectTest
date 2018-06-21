@@ -144,6 +144,9 @@ namespace SimLib
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "LIGHT ON STATES", UnitsName = "Mask",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "SPOILERS HANDLE POSITION", UnitsName = "percentage",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                     });
 
                     SimObjectType<Radios>.Register(new SimObjectType<Radios>.Field[]
