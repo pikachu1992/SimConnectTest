@@ -93,7 +93,7 @@ namespace SimLib
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "LIGHT BEACON", UnitsName = "bool",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
-                        new SimObjectType<AircraftState>.Field()
+o                        new SimObjectType<AircraftState>.Field()
                         { DatumName = "LIGHT NAV", UnitsName = "bool",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
                         new SimObjectType<AircraftState>.Field()
@@ -147,6 +147,9 @@ namespace SimLib
                         new SimObjectType<AircraftState>.Field()
                         { DatumName = "NUMBER OF ENGINES", UnitsName = "",
                             DatumType = SIMCONNECT_DATATYPE.INT32 },
+                        new SimObjectType<AircraftState>.Field()
+                        { DatumName = "SPOILERS HANDLE POSITION", UnitsName = "percentage",
+                            DatumType = SIMCONNECT_DATATYPE.FLOAT64 },
                     });
 
                     SimObjectType<Radios>.Register(new SimObjectType<Radios>.Field[]
