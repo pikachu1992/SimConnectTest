@@ -3,6 +3,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using IniParser;
 using IniParser.Model;
+using System.Windows.Forms;
+using System;
 
 namespace SimLib
 {
@@ -52,7 +54,7 @@ namespace SimLib
         /// TODO: look this up, somehow
         /// </summary>
         private const string simrootpath =
-            @"C:\Program Files (x86)\Lockheed Martin\Prepar3D v3";
+            @"C:\Microsoft Flight Simulator X";
 
         /// <summary>
         /// The name of the model folder as installed in
@@ -137,6 +139,7 @@ namespace SimLib
                 new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
             cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
             cfgFile.Parser.Configuration.SkipInvalidLines = true;
+            cfgFile.Parser.Configuration.AllowDuplicateSections = true;
 
             // read CFG file, it's just an INI file format
             return cfgFile.ReadFile(
@@ -173,6 +176,89 @@ namespace SimLib
             }
 
             return result;
+        }
+
+        private static KeyValuePair<string, Model> key;      
+
+        private static KeyValuePair<string, Model> KeyByKey(Dictionary<string, Model> dict, string val)
+        {
+
+            foreach (var pair in dict)
+            {
+                if (pair.Key.ToString() == val)
+                {
+                    key = pair;
+                    break;
+                }
+            }
+            return key;
+        }
+
+        private void WriteAircraftCFGFile(IniData data)
+        {           
+            FileIniDataParser parser = new FileIniDataParser();
+
+           parser.WriteFile(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg"), data);
+        }
+
+        private void GetSectionsForNewModelCFG(string modelTitle)
+        {
+            IniData iniData = new IniData();
+
+            foreach (var section in ConfigSections)
+            {
+                string[] sectionSplit = section.SectionName.Split('.');
+
+                foreach (var sectionKey in section.Keys)
+                {
+                    if (sectionKey.Value == modelTitle)
+                    {
+                        iniData.Sections.Add(section);
+                    }
+                }
+
+                if (sectionSplit[0] != "fltsim")
+                {
+                    iniData.Sections.Add(section);
+                }
+            }
+
+            WriteAircraftCFGFile(iniData);
+        }
+
+        private void GetSectionsForExistModelCFG(string modelTitle)
+        {
+            IniData iniData = new IniData();
+
+            foreach (var section in ConfigSections)
+            {
+                string[] sectionSplit = section.SectionName.Split('.');
+
+                foreach (var sectionKey in section.Keys)
+                {
+                    if (sectionKey.Value == modelTitle)
+                    {
+                        iniData.Sections.Add(section);
+                    }
+                }
+
+            }
+
+            iniData.Merge(GetConfigData(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)));
+
+            WriteAircraftCFGFile(iniData);
+        }
+
+        public void Install(string modelTitle)
+        {
+            if (!Directory.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)))
+                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type));
+
+            if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg")))
+                GetSectionsForNewModelCFG(modelTitle);
+            else
+                GetSectionsForExistModelCFG(modelTitle);
+
         }
     }
 }
