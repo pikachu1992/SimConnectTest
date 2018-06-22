@@ -52,7 +52,7 @@ namespace SimLib
         /// TODO: look this up, somehow
         /// </summary>
         private const string simrootpath =
-            @"C:\Program Files (x86)\Lockheed Martin\Prepar3D v3";
+            @"C:\Microsoft Flight Simulator X";
 
         /// <summary>
         /// The name of the model folder as installed in
@@ -137,6 +137,7 @@ namespace SimLib
                 new Regex(@"(//.*$)|(;.*$)|(^(-)+$)");
             cfgFile.Parser.Configuration.AllowDuplicateKeys = true;
             cfgFile.Parser.Configuration.SkipInvalidLines = true;
+            cfgFile.Parser.Configuration.AllowDuplicateSections = true;
 
             // read CFG file, it's just an INI file format
             return cfgFile.ReadFile(
@@ -230,10 +231,29 @@ namespace SimLib
             WriteAircraftCFGFile(iniData);
         }
 
+        private void WriteModelFolders()
+        {
+            foreach (string folder in Folders)
+            {
+                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, folder));
+
+                foreach (var file in Directory.GetFiles(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder)))
+                {
+                    if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, folder, Path.GetFileName(file))))
+                        File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, folder, Path.GetFileName(file)));
+                }
+            }
+        }
+
         public void Install(string modelTitle)
         {
             if (!Directory.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)))
+            {
                 Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type));
+
+                WriteModelFolders();
+            }
+                
 
             if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg")))
                 GetSectionsForNewModelCFG(modelTitle);
