@@ -178,22 +178,6 @@ namespace SimLib
             return result;
         }
 
-        private static KeyValuePair<string, Model> key;      
-
-        private static KeyValuePair<string, Model> KeyByKey(Dictionary<string, Model> dict, string val)
-        {
-
-            foreach (var pair in dict)
-            {
-                if (pair.Key.ToString() == val)
-                {
-                    key = pair;
-                    break;
-                }
-            }
-            return key;
-        }
-
         private void WriteAircraftCFGFile(IniData data)
         {           
             FileIniDataParser parser = new FileIniDataParser();
@@ -258,7 +242,6 @@ namespace SimLib
                 GetSectionsForNewModelCFG(modelTitle);
             else
                 GetSectionsForExistModelCFG(modelTitle);
-
         }
     }
 }
