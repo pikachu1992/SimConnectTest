@@ -93,7 +93,7 @@ namespace SimLib
 
                 // get the texture entry name
                 Name = section.Keys["title"];
-                folders.Add("texture." + Name);
+                folders.Add("texture." + section.Keys["texture"]);
 
                 // get any specific model folders
                 if (section.Keys["model"] != "")
@@ -180,7 +180,7 @@ namespace SimLib
         {
             FileIniDataParser parser = new FileIniDataParser();
 
-            parser.WriteFile(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg"), data);
+            parser.WriteFile(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, "aircraft.cfg"), data);
         }
 
         private void GetSectionsForNewModelCFG(string modelTitle)
@@ -226,39 +226,60 @@ namespace SimLib
 
             }
 
-            iniData.Merge(GetConfigData(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)));
+            iniData.Merge(GetConfigData(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name)));
 
             WriteAircraftCFGFile(iniData);
         }
 
-        private void WriteModelFolders()
+        private void WriteMainModelFolders()
         {
+            if (!Directory.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name)))
+                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name));
+
             foreach (string folder in Folders)
             {
-                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, folder));
+                if (!Directory.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder)))
+                    Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder));
 
                 foreach (var file in Directory.GetFiles(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder)))
                 {
-                    if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, folder, Path.GetFileName(file))))
-                        File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, folder, Path.GetFileName(file)));
+                    if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder, Path.GetFileName(file))))
+                        File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder, Path.GetFileName(file)));
+                }
+            }
+        }
+
+        private void GetTextureFolder(string modelTitle)
+        {
+            foreach (var texture in Textures)
+            {
+                if (texture.Name == modelTitle)
+                    InstallTextureFolder(texture.Folders[0]);               
+            }
+
+            void InstallTextureFolder(string texture)
+            {
+                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture));
+
+                foreach (var file in Directory.GetFiles(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, texture)))
+                {
+                    if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file))))
+                        File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, texture, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file)));
                 }
             }
         }
 
         public void Install(string modelTitle)
         {
-            if (!Directory.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)))
-            {
-                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type));
+            
+            WriteMainModelFolders();            
 
-                WriteModelFolders();
-            }
-                
-
-            if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg")))
+            if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, "aircraft.cfg")))
                 GetSectionsForNewModelCFG(modelTitle);
             else
                 GetSectionsForExistModelCFG(modelTitle);
+
+            GetTextureFolder(modelTitle);
         }
     }
 }
