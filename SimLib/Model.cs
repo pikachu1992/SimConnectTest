@@ -174,5 +174,71 @@ namespace SimLib
 
             return result;
         }
+
+        private void WriteAircraftCFGFile(IniData data)
+        {
+            FileIniDataParser parser = new FileIniDataParser();
+
+            parser.WriteFile(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg"), data);
+        }
+
+        private void GetSectionsForNewModelCFG(string modelTitle)
+        {
+            IniData iniData = new IniData();
+
+            foreach (var section in ConfigSections)
+            {
+                string[] sectionSplit = section.SectionName.Split('.');
+
+                foreach (var sectionKey in section.Keys)
+                {
+                    if (sectionKey.Value == modelTitle)
+                    {
+                        iniData.Sections.Add(section);
+                    }
+                }
+
+                if (sectionSplit[0] != "fltsim")
+                {
+                    iniData.Sections.Add(section);
+                }
+            }
+
+            WriteAircraftCFGFile(iniData);
+        }
+
+        private void GetSectionsForExistModelCFG(string modelTitle)
+        {
+            IniData iniData = new IniData();
+
+            foreach (var section in ConfigSections)
+            {
+                string[] sectionSplit = section.SectionName.Split('.');
+
+                foreach (var sectionKey in section.Keys)
+                {
+                    if (sectionKey.Value == modelTitle)
+                    {
+                        iniData.Sections.Add(section);
+                    }
+                }
+
+            }
+
+            iniData.Merge(GetConfigData(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)));
+
+            WriteAircraftCFGFile(iniData);
+        }
+
+        public void Install(string modelTitle)
+        {
+            if (!Directory.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type)))
+                Directory.CreateDirectory(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type));
+
+            if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Type, "aircraft.cfg")))
+                GetSectionsForNewModelCFG(modelTitle);
+            else
+                GetSectionsForExistModelCFG(modelTitle);
+        }
     }
 }
