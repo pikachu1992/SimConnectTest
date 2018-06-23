@@ -266,6 +266,18 @@ namespace SimLib
                     if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file))))
                         File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, texture, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file)));
                 }
+
+                InstallAirFile();
+            }
+
+            void InstallAirFile()
+            {
+                foreach (var section in ConfigSections)
+                {
+                    if (section.Keys["title"] == modelTitle)
+                        if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air"))))
+                            File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air")), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air")));
+                }
             }
         }
 
@@ -280,6 +292,7 @@ namespace SimLib
                 GetSectionsForExistModelCFG(modelTitle);
 
             GetTextureFolder(modelTitle);
+
         }
     }
 }
