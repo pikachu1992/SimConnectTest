@@ -244,7 +244,10 @@ namespace SimLib
                 foreach (var file in Directory.GetFiles(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder)))
                 {
                     if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder, Path.GetFileName(file))))
-                        File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder, Path.GetFileName(file)));
+                        File.Copy(
+                            Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, folder, Path.GetFileName(file)), 
+                            Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, folder, Path.GetFileName(file))
+                            );
                 }
             }
         }
@@ -264,7 +267,10 @@ namespace SimLib
                 foreach (var file in Directory.GetFiles(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, texture)))
                 {
                     if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file))))
-                        File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, texture, Path.GetFileName(file)), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file)));
+                        File.Copy(
+                            Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, texture, Path.GetFileName(file)), 
+                            Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, texture, Path.GetFileName(file))
+                            );
                 }
 
                 InstallAirFile();
@@ -276,7 +282,10 @@ namespace SimLib
                 {
                     if (section.Keys["title"] == modelTitle)
                         if (!File.Exists(Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air"))))
-                            File.Copy(Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air")), Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air")));
+                            File.Copy(
+                                Path.Combine(simrootpath, "SimObjects", "Airplanes", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air")), 
+                                Path.Combine(simrootpath, "SimObjects", "NETWORK", Name, Path.GetFileName(section.Keys["sim"].ToString() + ".air"))
+                                );
                 }
             }
         }
